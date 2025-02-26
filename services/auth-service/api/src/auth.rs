@@ -13,6 +13,7 @@ use axum_extra::{
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use uuid::Uuid;
 
 struct Keys {
     encoding: EncodingKey,
@@ -37,7 +38,7 @@ static KEYS: LazyLock<Keys> = LazyLock::new(|| {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     /// User ID
-    pub sub: String,
+    pub sub: Uuid,
     /// Expiration timestamp
     pub exp: usize,
 }
@@ -81,7 +82,7 @@ impl IntoResponse for AuthError {
     }
 }
 
-pub fn create_jwt(user_id: &str) -> Result<String, AuthError> {
+pub fn create_jwt(user_id: Uuid) -> Result<String, AuthError> {
     let expiration = chrono::Utc::now()
         .checked_add_signed(chrono::Duration::seconds(
             std::env::var("JWT_EXPIRATION")
@@ -93,7 +94,7 @@ pub fn create_jwt(user_id: &str) -> Result<String, AuthError> {
         .timestamp() as usize;
 
     let claims = Claims {
-        sub: user_id.to_string(),
+        sub: user_id,
         exp: expiration,
     };
     encode(&Header::default(), &claims, &KEYS.encoding).map_err(|_| AuthError::TokenCreation)
