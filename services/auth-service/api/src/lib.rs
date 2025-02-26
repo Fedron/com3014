@@ -39,9 +39,14 @@ pub async fn start() -> Result<(), AppError> {
         .route("/signup", post(signup))
         .route("/profile", get(profile))
         .with_state(AppState { conn });
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+
+    let host = std::env::var("HOST").unwrap_or("127.0.0.1".to_string());
+    let port = std::env::var("PORT").unwrap_or("3000".to_string());
+    let addr = format!("{host}:{port}");
+
+    let listener = tokio::net::TcpListener::bind(&addr)
         .await
-        .map_err(|_| AppError::CantListen("127.0.0.1:3000".to_string()))?;
+        .map_err(|_| AppError::CantListen(addr))?;
 
     tracing::debug!("listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, app)
