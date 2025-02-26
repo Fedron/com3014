@@ -11,7 +11,8 @@ use uuid::Uuid;
 
 use crate::{
     AppState,
-    auth::{AuthError, Claims, create_jwt},
+    auth::{Claims, create_jwt},
+    error::AuthError,
 };
 
 #[derive(Deserialize)]
@@ -32,21 +33,18 @@ pub async fn login(
     if let Some(user) = User::find()
         .filter(Expr::col(user::Column::Name).eq(payload.username.clone()))
         .one(&state.conn)
-        .await
-        .unwrap()
+        .await?
     {
         if let Ok(_) = Argon2::default().verify_password(
             payload.password.as_bytes(),
             &PasswordHash::new(&user.password).unwrap(),
         ) {
             let token = create_jwt(user.id)?;
-            Ok(Json(LoginResponse { token }))
-        } else {
-            Err(AuthError::IncorrectCredentials)
+            return Ok(Json(LoginResponse { token }));
         }
-    } else {
-        Err(AuthError::IncorrectCredentials)
     }
+
+    Err(AuthError::InvalidCredentials)
 }
 
 #[derive(Deserialize)]
@@ -67,11 +65,10 @@ pub async fn signup(
     if User::find()
         .filter(Expr::col(user::Column::Name).eq(payload.username.clone()))
         .one(&state.conn)
-        .await
-        .unwrap()
+        .await?
         .is_some()
     {
-        return Err(AuthError::IncorrectCredentials); // TODO: Use more descriptive error
+        return Err(AuthError::UserExists(payload.username));
     }
 
     let salt = SaltString::generate(&mut OsRng);
@@ -84,22 +81,19 @@ pub async fn signup(
         id: Set(Uuid::new_v4()),
         name: Set(payload.username),
         password: Set(hash.to_string()),
-    };
-    let created_user = created_user.insert(&state.conn).await;
-
-    match created_user {
-        Ok(user) => Ok(Json(SignupResponse { user_id: user.id })),
-        Err(err) => {
-            tracing::error!("{err}");
-            Err(AuthError::TokenCreation)
-        }
     }
+    .insert(&state.conn)
+    .await?;
+
+    Ok(Json(SignupResponse {
+        user_id: created_user.id,
+    }))
 }
 
 pub async fn profile(state: State<AppState>, claims: Claims) -> Result<String, AuthError> {
-    if let Ok(Some(user)) = User::find_by_id(claims.sub).one(&state.conn).await {
+    if let Some(user) = User::find_by_id(claims.sub).one(&state.conn).await? {
         Ok(format!("Hello, {}!", user.name))
     } else {
-        Err(AuthError::InvalidToken)
+        Err(AuthError::UserIdInvalid(claims.sub))
     }
 }

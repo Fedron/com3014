@@ -1,19 +1,15 @@
 use std::sync::LazyLock;
 
-use axum::{
-    Json, RequestPartsExt,
-    extract::FromRequestParts,
-    http::{StatusCode, request::Parts},
-    response::{IntoResponse, Response},
-};
+use axum::{RequestPartsExt, extract::FromRequestParts, http::request::Parts};
 use axum_extra::{
     TypedHeader,
     headers::{Authorization, authorization::Bearer},
 };
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 use uuid::Uuid;
+
+use crate::error::TokenError;
 
 struct Keys {
     encoding: EncodingKey,
@@ -37,9 +33,7 @@ static KEYS: LazyLock<Keys> = LazyLock::new(|| {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
-    /// User ID
     pub sub: Uuid,
-    /// Expiration timestamp
     pub exp: usize,
 }
 
@@ -47,42 +41,21 @@ impl<S> FromRequestParts<S> for Claims
 where
     S: Send + Sync,
 {
-    type Rejection = AuthError;
+    type Rejection = TokenError;
 
     async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
         let TypedHeader(Authorization(bearer)) = parts
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
-            .map_err(|_| AuthError::InvalidToken)?;
+            .map_err(|_| TokenError::Validation)?;
         let token_data = decode::<Claims>(bearer.token(), &KEYS.decoding, &Validation::default())
-            .map_err(|_| AuthError::InvalidToken)?;
+            .map_err(|_| TokenError::Validation)?;
 
         Ok(token_data.claims)
     }
 }
 
-#[derive(Debug)]
-pub enum AuthError {
-    IncorrectCredentials,
-    TokenCreation,
-    InvalidToken,
-}
-
-impl IntoResponse for AuthError {
-    fn into_response(self) -> Response {
-        let (status, error_message) = match self {
-            AuthError::IncorrectCredentials => (StatusCode::UNAUTHORIZED, "Incorrect credentials"),
-            AuthError::TokenCreation => (StatusCode::INTERNAL_SERVER_ERROR, "Token creation error"),
-            AuthError::InvalidToken => (StatusCode::BAD_REQUEST, "Invalid token"),
-        };
-        let body = Json(json!({
-            "error": error_message,
-        }));
-        (status, body).into_response()
-    }
-}
-
-pub fn create_jwt(user_id: Uuid) -> Result<String, AuthError> {
+pub fn create_jwt(user_id: Uuid) -> Result<String, TokenError> {
     let expiration = chrono::Utc::now()
         .checked_add_signed(chrono::Duration::seconds(
             std::env::var("JWT_EXPIRATION")
@@ -90,12 +63,12 @@ pub fn create_jwt(user_id: Uuid) -> Result<String, AuthError> {
                 .parse()
                 .unwrap_or(chrono::Duration::days(1).num_seconds()),
         ))
-        .expect("to create expiration")
+        .ok_or(TokenError::ExpirationOutOfRange)?
         .timestamp() as usize;
 
     let claims = Claims {
         sub: user_id,
         exp: expiration,
     };
-    encode(&Header::default(), &claims, &KEYS.encoding).map_err(|_| AuthError::TokenCreation)
+    encode(&Header::default(), &claims, &KEYS.encoding).map_err(|_| TokenError::Creation)
 }
