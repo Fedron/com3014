@@ -39,10 +39,13 @@ pub async fn login(
         .one(&state.conn)
         .await?
     {
-        if let Ok(_) = Argon2::default().verify_password(
-            payload.password.as_bytes(),
-            &PasswordHash::new(&user.password).unwrap(),
-        ) {
+        if Argon2::default()
+            .verify_password(
+                payload.password.as_bytes(),
+                &PasswordHash::new(&user.password).unwrap(),
+            )
+            .is_ok()
+        {
             let token = create_jwt(user.id)?;
             return Ok(Json(LoginResponse { token }));
         } else {

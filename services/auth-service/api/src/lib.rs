@@ -45,7 +45,7 @@ pub async fn start() -> Result<(), AppError> {
     tracing::debug!("listening on {}", listener.local_addr().unwrap());
     axum::serve(listener, app(conn))
         .await
-        .map_err(|err| AppError::Other(err))
+        .map_err(AppError::Other)
 }
 
 fn app(conn: DatabaseConnection) -> Router {

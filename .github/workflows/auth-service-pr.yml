@@ -26,7 +26,7 @@ jobs:
             - name: Check formatting
               run: |
                 cd services/auth-service
-                cargo fmt -- --check
+                cargo fmt --check
 
             - name: Run Clippy (Linting)
               run: |
