@@ -46,4 +46,4 @@ jobs:
             - name: Run coverage
               run: |
                 cd services/auth-service
-                cargo tarpaulin --verbose --timeout --out Lcov
+                cargo tarpaulin --verbose --timeout 60 --out Lcov
