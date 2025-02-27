@@ -1,0 +1,49 @@
+name: PR Pipeline for auth-service
+
+on:
+    pull_request:
+        paths:
+            - 'services/auth-service/**'
+
+jobs:
+    build-and-test:
+        name: Build, Lint & Test
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+            
+            - name: Set up Rust
+              uses: dtolnay/rust-toolchain@stable
+
+            - name: Cache Rust dependencies
+              uses: Swatinem/rust-cache@v2
+
+            - name: Install Tarpaulin
+              run: cargo install cargo-tarpaulin
+
+            - name: Check formatting
+              run: |
+                cd services/auth-service
+                cargo fmt -- --check
+
+            - name: Run Clippy (Linting)
+              run: |
+                cd services/auth-service
+                cargo clippy -- -D warnings
+
+            - name: Build project
+              run: |
+                cd services/auth-service
+                cargo build --release
+            
+            - name: Run tests
+              run: |
+                cd services/auth-service
+                cargo test --all
+            
+            - name: Run coverage
+              run: |
+                cd services/auth-service
+                cargo tarpaulin --verbose --timeout --out Lcov
