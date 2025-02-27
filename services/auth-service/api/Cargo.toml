@@ -13,6 +13,7 @@ sea-orm = { version = "1.1.6", features = [
     "debug-print",
     "runtime-tokio-native-tls",
     "sqlx-postgres",
+    "sqlx-sqlite",
 ] }
 serde = { version = "1.0.218", features = ["derive"] }
 serde_json = "1.0.139"
@@ -25,3 +26,8 @@ entity = { path = "../entity" }
 migration = { path = "../migration" }
 argon2 = "0.5.3"
 thiserror = "2.0.11"
+http-body-util = "0.1.2"
+mime = "0.3.17"
+
+[dev-dependencies]
+tower = { version = "0.5.2", features = ["util"] }

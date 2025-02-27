@@ -30,6 +30,10 @@ pub async fn login(
     state: State<AppState>,
     Json(payload): Json<LoginRequest>,
 ) -> Result<Json<LoginResponse>, AuthError> {
+    if payload.username.is_empty() || payload.password.is_empty() {
+        return Err(AuthError::InvalidCredentials);
+    }
+
     if let Some(user) = User::find()
         .filter(Expr::col(user::Column::Name).eq(payload.username.clone()))
         .one(&state.conn)
@@ -41,6 +45,8 @@ pub async fn login(
         ) {
             let token = create_jwt(user.id)?;
             return Ok(Json(LoginResponse { token }));
+        } else {
+            return Err(AuthError::InvalidPassword);
         }
     }
 
@@ -53,15 +59,19 @@ pub struct SignupRequest {
     password: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct SignupResponse {
-    user_id: Uuid,
+    pub user_id: Uuid,
 }
 
 pub async fn signup(
     state: State<AppState>,
     Json(payload): Json<SignupRequest>,
 ) -> Result<Json<SignupResponse>, AuthError> {
+    if payload.username.is_empty() || payload.password.is_empty() {
+        return Err(AuthError::InvalidCredentials);
+    }
+
     if User::find()
         .filter(Expr::col(user::Column::Name).eq(payload.username.clone()))
         .one(&state.conn)

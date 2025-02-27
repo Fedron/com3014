@@ -48,10 +48,8 @@ where
             .extract::<TypedHeader<Authorization<Bearer>>>()
             .await
             .map_err(|_| TokenError::Validation)?;
-        let token_data = decode::<Claims>(bearer.token(), &KEYS.decoding, &Validation::default())
-            .map_err(|_| TokenError::Validation)?;
 
-        Ok(token_data.claims)
+        validate_jwt(bearer.token())
     }
 }
 
@@ -71,4 +69,52 @@ pub fn create_jwt(user_id: Uuid) -> Result<String, TokenError> {
         exp: expiration,
     };
     encode(&Header::default(), &claims, &KEYS.encoding).map_err(|_| TokenError::Creation)
+}
+
+pub fn validate_jwt(token: &str) -> Result<Claims, TokenError> {
+    let token_data = decode::<Claims>(token, &KEYS.decoding, &Validation::default())
+        .map_err(|_| TokenError::Validation)?;
+
+    Ok(token_data.claims)
+}
+
+#[cfg(test)]
+mod tests {
+    use uuid::Uuid;
+
+    use super::*;
+
+    #[test]
+    fn token_is_created() {
+        setup_env_vars();
+        let token = create_jwt(Uuid::max());
+        assert!(
+            matches!(token, Ok(_)),
+            "a jwt token should have been created"
+        );
+    }
+
+    #[test]
+    fn token_is_valid() {
+        setup_env_vars();
+        let token = create_jwt(Uuid::max()).unwrap();
+        let claims = validate_jwt(&token);
+
+        assert!(
+            matches!(claims, Ok(_)),
+            "a jwt token should have been created"
+        );
+        assert_eq!(
+            claims.unwrap().sub,
+            Uuid::max(),
+            "the jwt token claims uuid should match Uuid::MAX"
+        );
+    }
+
+    fn setup_env_vars() {
+        unsafe {
+            std::env::set_var("JWT_SECRET", "mysecret");
+            std::env::set_var("JWT_EXPIRATION", "1")
+        }
+    }
 }

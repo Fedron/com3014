@@ -24,6 +24,8 @@ pub enum AuthError {
     Database(#[from] sea_orm::DbErr),
     #[error("supplied credentials were invalid")]
     InvalidCredentials,
+    #[error("supplied password failed authentication")]
+    InvalidPassword,
     #[error("the user with name '{0}' already exists")]
     UserExists(String),
     #[error("user id '{0}' is invalid")]
@@ -38,7 +40,7 @@ impl IntoResponse for AuthError {
         let status = match self {
             AuthError::InvalidCredentials => StatusCode::BAD_REQUEST,
             AuthError::UserExists(_) => StatusCode::CONFLICT,
-            AuthError::UserIdInvalid(_) => StatusCode::UNAUTHORIZED,
+            AuthError::InvalidPassword | AuthError::UserIdInvalid(_) => StatusCode::UNAUTHORIZED,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         };
         (
@@ -65,7 +67,7 @@ impl IntoResponse for TokenError {
     fn into_response(self) -> Response {
         tracing::error!("token error: {}", self);
         let status = match self {
-            TokenError::Validation => StatusCode::BAD_REQUEST,
+            TokenError::Validation => StatusCode::UNAUTHORIZED,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         };
         (
