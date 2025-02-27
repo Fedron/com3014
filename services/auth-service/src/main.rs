@@ -1,3 +1,3 @@
 fn main() {
-    api::start();
+    api::start().unwrap();
 }
