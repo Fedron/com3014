@@ -1,0 +1,10 @@
+[package]
+name = "auth-service"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+members = [".", "api", "entity", "migration"]
+
+[dependencies]
+api = { path = "api" }
