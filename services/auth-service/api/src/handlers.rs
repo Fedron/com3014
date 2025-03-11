@@ -1,4 +1,8 @@
-use ::entity::{user, user::Entity as User};
+use ::entity::{
+    sea_orm_active_enums::UserRole,
+    user::{self, Entity as User},
+    user_community_role_mapping::{self, Entity as UserCommunityRole},
+};
 use argon2::{
     Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
     password_hash::{SaltString, rand_core::OsRng},
@@ -9,11 +13,7 @@ use sea_orm::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::{
-    AppState,
-    auth::{Claims, create_jwt},
-    error::AuthError,
-};
+use crate::{AppState, auth::create_jwt, error::AuthError};
 
 #[derive(Deserialize)]
 pub struct LoginRequest {
@@ -46,7 +46,15 @@ pub async fn login(
             )
             .is_ok()
         {
-            let token = create_jwt(user.id)?;
+            let user_roles = user
+                .find_related(UserCommunityRole)
+                .all(&state.conn)
+                .await?
+                .iter()
+                .map(|r| (r.community_id, r.role.clone()))
+                .collect();
+
+            let token = create_jwt(user.id, user_roles)?;
             return Ok(Json(LoginResponse { token }));
         } else {
             return Err(AuthError::InvalidPassword);
@@ -103,10 +111,85 @@ pub async fn signup(
     }))
 }
 
-pub async fn profile(state: State<AppState>, claims: Claims) -> Result<String, AuthError> {
-    if let Some(user) = User::find_by_id(claims.sub).one(&state.conn).await? {
-        Ok(format!("Hello, {}!", user.name))
+#[derive(Deserialize)]
+pub struct UpdateRolesRequest {
+    user_id: Uuid,
+    community_id: Uuid,
+    roles: Vec<UserRole>,
+}
+
+pub async fn add_new_roles(
+    state: State<AppState>,
+    Json(payload): Json<UpdateRolesRequest>,
+) -> Result<(), AuthError> {
+    let user = User::find_by_id(payload.user_id).one(&state.conn).await?;
+    if let Some(user) = user {
+        let existing_roles: Vec<UserRole> = user
+            .find_related(UserCommunityRole)
+            .all(&state.conn)
+            .await?
+            .iter()
+            .filter_map(|r| {
+                if r.community_id == payload.community_id {
+                    Some(r.role.clone())
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        for new_role in payload.roles.iter() {
+            if !existing_roles.contains(new_role) {
+                user_community_role_mapping::ActiveModel {
+                    user_id: Set(payload.user_id),
+                    community_id: Set(payload.community_id),
+                    role: Set(new_role.clone()),
+                    ..Default::default()
+                }
+                .insert(&state.conn)
+                .await?;
+            }
+        }
+
+        Ok(())
     } else {
-        Err(AuthError::UserIdInvalid(claims.sub))
+        Err(AuthError::UserIdInvalid(payload.user_id))
+    }
+}
+
+pub async fn remove_roles(
+    state: State<AppState>,
+    Json(payload): Json<UpdateRolesRequest>,
+) -> Result<(), AuthError> {
+    let user = User::find_by_id(payload.user_id).one(&state.conn).await?;
+    if let Some(user) = user {
+        let existing_roles: Vec<(i32, UserRole)> = user
+            .find_related(UserCommunityRole)
+            .all(&state.conn)
+            .await?
+            .iter()
+            .filter_map(|r| {
+                if r.community_id == payload.community_id {
+                    Some((r.id, r.role.clone()))
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        for (id, existing_role) in existing_roles.iter() {
+            if payload.roles.contains(existing_role) {
+                user_community_role_mapping::ActiveModel {
+                    id: Set(*id),
+                    ..Default::default()
+                }
+                .delete(&state.conn)
+                .await?;
+            }
+        }
+
+        Ok(())
+    } else {
+        Err(AuthError::UserIdInvalid(payload.user_id))
     }
 }

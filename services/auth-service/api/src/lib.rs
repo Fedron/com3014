@@ -1,9 +1,9 @@
 use axum::{
     Router,
-    routing::{get, post},
+    routing::{delete, patch, post},
 };
 use error::AppError;
-use handlers::{login, profile, signup};
+use handlers::{add_new_roles, login, remove_roles, signup};
 use migration::{Migrator, MigratorTrait};
 use sea_orm::{Database, DatabaseConnection};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -52,14 +52,13 @@ fn app(conn: DatabaseConnection) -> Router {
     Router::new()
         .route("/login", post(login))
         .route("/signup", post(signup))
-        .route("/profile", get(profile))
+        .route("/roles", patch(add_new_roles))
+        .route("/roles", delete(remove_roles))
         .with_state(AppState { conn })
 }
 
 #[cfg(test)]
 mod tests {
-    use std::time::Duration;
-
     use axum::{
         body::Body,
         http::{self, Request, StatusCode},
@@ -70,7 +69,7 @@ mod tests {
     use tower::{Service, util::ServiceExt};
     use uuid::Uuid;
 
-    use crate::{auth::create_jwt, handlers::SignupResponse};
+    use crate::handlers::SignupResponse;
 
     use super::*;
     use ::entity::{user, user::Entity as User};
@@ -308,82 +307,6 @@ mod tests {
                         })
                         .to_string(),
                     ))
-                    .unwrap(),
-            )
-            .await
-            .unwrap();
-
-        // Assert.
-        assert_eq!(
-            response.status(),
-            StatusCode::UNAUTHORIZED,
-            "Status code should have been UNAUTHORIZED"
-        );
-    }
-
-    #[tokio::test]
-    async fn profile_is_only_accessible_with_valid_jwt() {
-        // Arrange.
-        setup_env_vars();
-        let conn = setup_database().await;
-        let app = app(conn.clone());
-
-        let user_id = Uuid::new_v4();
-        let existing_user = user::ActiveModel {
-            id: Set(user_id),
-            name: Set("existinguser".to_owned()),
-            password: Set("mypassword".to_owned()),
-        };
-        User::insert(existing_user).exec(&conn).await.unwrap();
-
-        let jwt = create_jwt(user_id).unwrap();
-
-        // Act.
-        let response = app
-            .oneshot(
-                Request::builder()
-                    .uri("/profile")
-                    .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
-                    .header(http::header::AUTHORIZATION, format!("Bearer {jwt}"))
-                    .body(Body::empty())
-                    .unwrap(),
-            )
-            .await
-            .unwrap();
-
-        // Assert.
-        assert_eq!(
-            response.status(),
-            StatusCode::OK,
-            "Status code should have been OK"
-        );
-
-        let body = response.into_body().collect().await.unwrap().to_bytes();
-        assert_eq!(
-            &body[..],
-            b"Hello, existinguser!",
-            "User profile matching JWT owner should have been retrieved"
-        );
-    }
-
-    #[tokio::test]
-    async fn expired_jwt_cannot_access_profile() {
-        // Arrange.
-        setup_env_vars();
-        let conn = setup_database().await;
-        let app = app(conn.clone());
-
-        let jwt = create_jwt(Uuid::new_v4()).unwrap();
-
-        // Act.
-        tokio::time::sleep(Duration::from_secs(2)).await;
-        let response = app
-            .oneshot(
-                Request::builder()
-                    .uri("/profile")
-                    .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
-                    .header(http::header::AUTHORIZATION, format!("Bearer {jwt}"))
-                    .body(Body::empty())
                     .unwrap(),
             )
             .await
