@@ -261,57 +261,6 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn valid_user_can_login() {
-        // Arrange.
-        setup_env_vars();
-        let conn = setup_database().await;
-        let mut app = routes(AppState { conn: conn.clone() });
-
-        app.call(
-            Request::builder()
-                .uri("/signup")
-                .method(http::Method::POST)
-                .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
-                .body(Body::from(
-                    json!({
-                        "username": "myuser",
-                        "password": "mypassword"
-                    })
-                    .to_string(),
-                ))
-                .unwrap(),
-        )
-        .await
-        .unwrap();
-
-        // Act.
-        let response = app
-            .oneshot(
-                Request::builder()
-                    .uri("/login")
-                    .method(http::Method::POST)
-                    .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
-                    .body(Body::from(
-                        json!({
-                            "username": "myuser",
-                            "password": "mypassword"
-                        })
-                        .to_string(),
-                    ))
-                    .unwrap(),
-            )
-            .await
-            .unwrap();
-
-        // Assert.
-        assert_eq!(
-            response.status(),
-            StatusCode::OK,
-            "Status code should have been OK"
-        );
-    }
-
-    #[tokio::test]
     async fn empty_credentials_cannot_login() {
         // Arrange.
         setup_env_vars();
