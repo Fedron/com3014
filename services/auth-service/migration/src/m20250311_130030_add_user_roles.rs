@@ -48,7 +48,7 @@ impl MigrationTrait for Migration {
                             .not_null(),
                     )
                     .foreign_key(
-                        &mut ForeignKey::create()
+                        ForeignKey::create()
                             .name("FK_user_role")
                             .from(
                                 UserCommunityRoleMapping::Table,
