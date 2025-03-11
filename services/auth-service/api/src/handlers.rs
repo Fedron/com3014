@@ -3,27 +3,29 @@ use ::entity::{
     user::{self, Entity as User},
     user_community_role_mapping::{self, Entity as UserCommunityRole},
 };
+use aide::axum::IntoApiResponse;
 use argon2::{
     Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
     password_hash::{SaltString, rand_core::OsRng},
 };
-use axum::{Json, extract::State};
+use axum::{Json, extract::State, http::StatusCode, response::IntoResponse};
 use migration::Expr;
+use schemars::JsonSchema;
 use sea_orm::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::{AppState, auth::create_jwt, error::AuthError};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, JsonSchema)]
 pub struct LoginRequest {
     username: String,
     password: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, JsonSchema)]
 pub struct LoginResponse {
-    token: String,
+    pub token: String,
 }
 
 pub async fn login(
@@ -64,13 +66,13 @@ pub async fn login(
     Err(AuthError::InvalidCredentials)
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, JsonSchema)]
 pub struct SignupRequest {
     username: String,
     password: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 pub struct SignupResponse {
     pub user_id: Uuid,
 }
@@ -111,7 +113,7 @@ pub async fn signup(
     }))
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, JsonSchema)]
 pub struct UpdateRolesRequest {
     user_id: Uuid,
     community_id: Uuid,
@@ -121,7 +123,7 @@ pub struct UpdateRolesRequest {
 pub async fn add_new_roles(
     state: State<AppState>,
     Json(payload): Json<UpdateRolesRequest>,
-) -> Result<(), AuthError> {
+) -> Result<impl IntoApiResponse, AuthError> {
     let user = User::find_by_id(payload.user_id).one(&state.conn).await?;
     if let Some(user) = user {
         let existing_roles: Vec<UserRole> = user
@@ -151,7 +153,7 @@ pub async fn add_new_roles(
             }
         }
 
-        Ok(())
+        Ok(StatusCode::NO_CONTENT.into_response())
     } else {
         Err(AuthError::UserIdInvalid(payload.user_id))
     }
@@ -160,7 +162,7 @@ pub async fn add_new_roles(
 pub async fn remove_roles(
     state: State<AppState>,
     Json(payload): Json<UpdateRolesRequest>,
-) -> Result<(), AuthError> {
+) -> Result<impl IntoApiResponse, AuthError> {
     let user = User::find_by_id(payload.user_id).one(&state.conn).await?;
     if let Some(user) = user {
         let existing_roles: Vec<(i32, UserRole)> = user
@@ -188,7 +190,7 @@ pub async fn remove_roles(
             }
         }
 
-        Ok(())
+        Ok(StatusCode::NO_CONTENT)
     } else {
         Err(AuthError::UserIdInvalid(payload.user_id))
     }
