@@ -1,3 +1,6 @@
 fn main() {
-    api::start().unwrap();
+    match api::start() {
+        Ok(_) => println!("Finished running!"),
+        Err(e) => eprintln!("Something went wrong! {e}"),
+    };
 }

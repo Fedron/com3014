@@ -28,6 +28,8 @@ argon2 = "0.5.3"
 thiserror = "2.0.11"
 http-body-util = "0.1.2"
 mime = "0.3.17"
+aide = { version = "0.14.1", features = ["axum-json", "scalar", "macros"] }
+schemars = { version = "0.8.22", features = ["uuid1"] }
 
 [dev-dependencies]
 tower = { version = "0.5.2", features = ["util"] }

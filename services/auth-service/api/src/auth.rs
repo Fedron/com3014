@@ -5,6 +5,7 @@ use axum_extra::{
     TypedHeader,
     headers::{Authorization, authorization::Bearer},
 };
+use entity::sea_orm_active_enums::UserRole;
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
@@ -35,6 +36,7 @@ static KEYS: LazyLock<Keys> = LazyLock::new(|| {
 pub struct Claims {
     pub sub: Uuid,
     pub exp: usize,
+    pub roles: Vec<(Uuid, UserRole)>,
 }
 
 impl<S> FromRequestParts<S> for Claims
@@ -53,7 +55,7 @@ where
     }
 }
 
-pub fn create_jwt(user_id: Uuid) -> Result<String, TokenError> {
+pub fn create_jwt(user_id: Uuid, roles: Vec<(Uuid, UserRole)>) -> Result<String, TokenError> {
     let expiration = chrono::Utc::now()
         .checked_add_signed(chrono::Duration::seconds(
             std::env::var("JWT_EXPIRATION")
@@ -67,6 +69,7 @@ pub fn create_jwt(user_id: Uuid) -> Result<String, TokenError> {
     let claims = Claims {
         sub: user_id,
         exp: expiration,
+        roles,
     };
     encode(&Header::default(), &claims, &KEYS.encoding).map_err(|_| TokenError::Creation)
 }
@@ -87,7 +90,7 @@ mod tests {
     #[test]
     fn token_is_created() {
         setup_env_vars();
-        let token = create_jwt(Uuid::max());
+        let token = create_jwt(Uuid::max(), vec![]);
         assert!(
             matches!(token, Ok(_)),
             "a jwt token should have been created"
@@ -97,7 +100,7 @@ mod tests {
     #[test]
     fn token_is_valid() {
         setup_env_vars();
-        let token = create_jwt(Uuid::max()).unwrap();
+        let token = create_jwt(Uuid::max(), vec![]).unwrap();
         let claims = validate_jwt(&token);
 
         assert!(
