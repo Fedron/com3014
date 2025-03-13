@@ -1,16 +1,10 @@
 use std::sync::LazyLock;
 
-use axum::{RequestPartsExt, extract::FromRequestParts, http::request::Parts};
-use axum_extra::{
-    TypedHeader,
-    headers::{Authorization, authorization::Bearer},
-};
-use entity::sea_orm_active_enums::UserRole;
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
-use serde::{Deserialize, Serialize};
+use serde::{Serialize, de::DeserializeOwned};
 use uuid::Uuid;
 
-use crate::error::TokenError;
+use crate::{claims::Claims, error::TokenError};
 
 struct Keys {
     encoding: EncodingKey,
@@ -32,30 +26,10 @@ static KEYS: LazyLock<Keys> = LazyLock::new(|| {
     Keys::new(secret.as_bytes())
 });
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Claims {
-    pub sub: Uuid,
-    pub exp: usize,
-    pub roles: Vec<(Uuid, UserRole)>,
-}
-
-impl<S> FromRequestParts<S> for Claims
+pub fn create_jwt<R>(user_id: Uuid, roles: Vec<(Uuid, R)>) -> Result<String, TokenError>
 where
-    S: Send + Sync,
+    R: Serialize,
 {
-    type Rejection = TokenError;
-
-    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
-        let TypedHeader(Authorization(bearer)) = parts
-            .extract::<TypedHeader<Authorization<Bearer>>>()
-            .await
-            .map_err(|_| TokenError::Validation)?;
-
-        validate_jwt(bearer.token())
-    }
-}
-
-pub fn create_jwt(user_id: Uuid, roles: Vec<(Uuid, UserRole)>) -> Result<String, TokenError> {
     let expiration = chrono::Utc::now()
         .checked_add_signed(chrono::Duration::seconds(
             std::env::var("JWT_EXPIRATION")
@@ -74,8 +48,11 @@ pub fn create_jwt(user_id: Uuid, roles: Vec<(Uuid, UserRole)>) -> Result<String,
     encode(&Header::default(), &claims, &KEYS.encoding).map_err(|_| TokenError::Creation)
 }
 
-pub fn validate_jwt(token: &str) -> Result<Claims, TokenError> {
-    let token_data = decode::<Claims>(token, &KEYS.decoding, &Validation::default())
+pub fn validate_jwt<R>(token: &str) -> Result<Claims<R>, TokenError>
+where
+    R: DeserializeOwned,
+{
+    let token_data = decode::<Claims<R>>(token, &KEYS.decoding, &Validation::default())
         .map_err(|_| TokenError::Validation)?;
 
     Ok(token_data.claims)
@@ -90,7 +67,7 @@ mod tests {
     #[test]
     fn token_is_created() {
         setup_env_vars();
-        let token = create_jwt(Uuid::max(), vec![]);
+        let token = create_jwt::<i32>(Uuid::max(), vec![]);
         assert!(
             matches!(token, Ok(_)),
             "a jwt token should have been created"
@@ -100,8 +77,8 @@ mod tests {
     #[test]
     fn token_is_valid() {
         setup_env_vars();
-        let token = create_jwt(Uuid::max(), vec![]).unwrap();
-        let claims = validate_jwt(&token);
+        let token = create_jwt::<i32>(Uuid::max(), vec![]).unwrap();
+        let claims = validate_jwt::<i32>(&token);
 
         assert!(
             matches!(claims, Ok(_)),

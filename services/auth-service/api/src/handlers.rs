@@ -13,9 +13,10 @@ use migration::Expr;
 use schemars::JsonSchema;
 use sea_orm::*;
 use serde::{Deserialize, Serialize};
+use shared_rust::jwt::create_jwt;
 use uuid::Uuid;
 
-use crate::{AppState, auth::create_jwt, error::AuthError};
+use crate::{AppState, error::AuthError};
 
 #[derive(Deserialize, JsonSchema)]
 pub struct LoginRequest {

@@ -11,7 +11,8 @@ cargo run
 
 Using docker:
 ```bash
-docker build -t auth-service:latest .
+# assuming cwd is at the root of the repository
+docker build -t auth-service:latest -f services/auth-service/Dockerfile .
 docker run -p "3000:3000" -e "DATABASE_URL=my_postgres_url","JWT_SECRET=secret" auth-service
 ```
 
