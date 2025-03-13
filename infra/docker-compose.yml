@@ -1,15 +1,28 @@
 services:
+  api-gateway:
+    image: api-gateway:latest
+    container_name: api-gateway
+    depends_on:
+      - auth-service
+    ports:
+      - "3000:3000"
+    environment:
+      AUTH_SERVICE_HOST: "auth-service"
+      HOST: "0.0.0.0"
+    restart: always
+
   auth-service:
     image: auth-service:latest
     container_name: auth-service
     depends_on:
       - auth-db
     ports:
-      - "3000:3000"
+      - "3001:80"
     environment:
       DATABASE_URL: "postgres://postgres:password@auth-db:5432/auth"
       JWT_SECRET: "super_strong_secret"
       HOST: "0.0.0.0"
+      PORT: "80"
     restart: always
 
   auth-db:
