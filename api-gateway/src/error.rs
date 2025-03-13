@@ -1,5 +1,6 @@
 use aide::OperationIo;
 use schemars::JsonSchema;
+use serde::Serialize;
 
 #[derive(thiserror::Error, Debug, JsonSchema, OperationIo)]
 pub enum AppError {
@@ -9,4 +10,17 @@ pub enum AppError {
     CantListen(String),
     #[error("IO error: {0}")]
     Io(String),
+    #[error("reqwest error: {0}")]
+    Reqwest(String),
+}
+
+impl From<reqwest::Error> for AppError {
+    fn from(value: reqwest::Error) -> Self {
+        AppError::Reqwest(value.to_string())
+    }
+}
+
+#[derive(Serialize, JsonSchema, OperationIo)]
+pub struct ErrorJson {
+    pub error: String,
 }

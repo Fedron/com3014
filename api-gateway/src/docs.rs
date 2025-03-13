@@ -10,7 +10,9 @@ use aide::{
 };
 use axum::{Extension, Json, response::IntoResponse};
 
-pub fn docs_routes() -> ApiRouter {
+use crate::state::AppState;
+
+pub fn docs_routes(state: AppState) -> ApiRouter {
     aide::generate::infer_responses(true);
 
     let router: ApiRouter = ApiRouter::new()
@@ -24,7 +26,8 @@ pub fn docs_routes() -> ApiRouter {
             ),
             |p| p,
         )
-        .route("/private/api.json", get(serve_docs));
+        .route("/private/api.json", get(serve_docs))
+        .with_state(state);
 
     aide::generate::infer_responses(false);
 
