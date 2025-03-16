@@ -1,6 +1,7 @@
 # A.N.T.T.O
 
 ## Deployment
+A.N.T.T.O can be deployed to a local Kubernetes cluster using Minikube.
 
 ### Requirements
 - Minikube
@@ -10,11 +11,6 @@
 ### Steps
 
 ```bash
-minikube start --cpus=4 --memory=8192 --disk-size=20g
-minikube addons enable ingress
-minikube image load auth-service
-minikube image load api-gateway
-cd infra/helm/umbrella-chart
-helm dependency update
-helm install antto ./
+git clone
+./infra/deploy_k8.sh
 ```
