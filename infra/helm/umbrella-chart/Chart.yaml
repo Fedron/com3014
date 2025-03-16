@@ -6,3 +6,6 @@ dependencies:
   - name: auth
     version: "0.1.0"
     repository: "file://../charts/auth"
+  - name: api-gateway
+    version: "0.1.0"
+    repository: "file://../charts/api-gateway"
