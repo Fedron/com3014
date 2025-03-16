@@ -1,0 +1,8 @@
+apiVersion: v2
+name: antto
+description: Antto
+version: 0.1.0
+dependencies:
+  - name: auth
+    version: "0.1.0"
+    repository: "file://../charts/auth"

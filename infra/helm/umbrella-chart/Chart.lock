@@ -1,0 +1,6 @@
+dependencies:
+- name: auth
+  repository: file://../charts/auth
+  version: 0.1.0
+digest: sha256:e17d78114259295df68127f00b78d1206686ea6910c93c97693a3dadd867f76c
+generated: "2025-03-16T14:07:28.042555771Z"
