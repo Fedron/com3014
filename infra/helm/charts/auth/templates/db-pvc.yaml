@@ -6,10 +6,7 @@ metadata:
     app: {{ .Release.Name }}-auth-db
 spec:
   accessModes:
-  - {{ .Values.database.persistence.accessMode | quote }}
-  {{- if .Values.database.persistence.storageClass }}
-  storageClassName: {{ .Values.database.persistence.storageClass | quote }}
-  {{- end }}
+  - "ReadWriteOnce"
   resources:
     requests:
-      storage: {{ .Values.database.persistence.size | quote }}
+      storage: "1Gi"

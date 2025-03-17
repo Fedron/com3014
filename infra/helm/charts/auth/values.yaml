@@ -1,24 +1,7 @@
-service:
-  replicaCount: 1
-  image:
-    repository: auth-service
-    tag: latest
-    pullPolicy: IfNotPresent
-  port: 80
-  targetPort: 80
 database:
-  image:
-    repository: postgres
-    tag: "15"
-    pullPolicy: IfNotPresent
-  port: 5432
   credentials:
     username: postgres
     password: password
     database: auth
-  persistence:
-    storageClass: ""
-    accessMode: ReadWriteOnce
-    size: 1Gi
 secrets:
   JWT_SECRET: "super_strong_secret"

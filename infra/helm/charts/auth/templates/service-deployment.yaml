@@ -6,7 +6,7 @@ metadata:
     app: {{ .Release.Name }}-auth-service
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 spec:
-  replicas: {{ .Values.service.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: {{ .Release.Name }}-auth-service
@@ -17,10 +17,10 @@ spec:
     spec:
       containers:
       - name: auth-service
-        image: "{{ .Values.service.image.repository }}:{{ .Values.service.image.tag }}"
-        imagePullPolicy: {{ .Values.service.image.pullPolicy }}
+        image: "auth-service:latest"
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: {{ .Values.service.targetPort }}
+        - containerPort: 80
         env:
         - name: DATABASE_URL
           value: "postgres://{{ .Values.database.credentials.username}}:{{ .Values.database.credentials.password }}@{{ .Release.Name }}-auth-db:{{ .Values.database.port}}/{{ .Values.database.credentials.database}}"
@@ -32,7 +32,7 @@ spec:
         - name: HOST
           value: "0.0.0.0"
         - name: PORT
-          value: "{{ .Values.service.targetPort }}"
+          value: "80"
         resources:
           limits:
             cpu: 500m

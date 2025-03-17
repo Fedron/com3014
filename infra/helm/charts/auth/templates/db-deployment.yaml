@@ -17,10 +17,10 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
-        imagePullPolicy: {{ .Values.database.image.pullPolicy }}
+        image: "postgres:15"
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: {{ .Values.database.port }}
+        - containerPort: 5432
         env:
         - name: POSTGRES_USER
           value: "{{ .Values.database.credentials.username }}"

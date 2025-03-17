@@ -6,7 +6,7 @@ metadata:
     app: api-gateway
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: api-gateway
@@ -17,15 +17,17 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: "{{ .Values.image.repository}}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: "api-gateway:latest"
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: {{ .Values.service.targetPort }}
+        - containerPort: 80
         env:
-        {{- range $key, $value :=  .Values.env }}
-        - name: {{ $key }}
-          value: "{{ $value }}"
-        {{- end }}
+        - name: AUTH_SERVICE_HOST
+          value: "auth-service"
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "80"
         resources:
           limits:
             cpu: 500m
