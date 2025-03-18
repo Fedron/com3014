@@ -1,0 +1,5 @@
+apiVersion: v2
+name: auth
+description: Authentication microservice with database
+version: 0.1.0
+appVersion: "1.0.0"

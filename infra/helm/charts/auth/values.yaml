@@ -1,0 +1,7 @@
+database:
+  credentials:
+    username: postgres
+    password: password
+    database: auth
+secrets:
+  JWT_SECRET: "super_strong_secret"

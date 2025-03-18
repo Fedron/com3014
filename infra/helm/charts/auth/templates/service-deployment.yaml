@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-auth-service
+  labels:
+    app: {{ .Release.Name }}-auth-service
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-auth-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-auth-service
+    spec:
+      containers:
+      - name: auth-service
+        image: "auth-service:latest"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: DATABASE_URL
+          value: "postgres://{{ .Values.database.credentials.username}}:{{ .Values.database.credentials.password }}@{{ .Release.Name }}-auth-db:{{ .Values.database.port}}/{{ .Values.database.credentials.database}}"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-auth-secrets
+              key: JWT_SECRET
+        - name: HOST
+          value: "0.0.0.0"
+        - name: PORT
+          value: "80"
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi

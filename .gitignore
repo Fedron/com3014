@@ -1,2 +1,4 @@
 .env
 target
+infra/helm/umbrella-chart/charts/*
+infra/helm/umbrella-chart/Chart.lock
