@@ -126,11 +126,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'events.authentication.CustomJWTAuthentication',
-    ),
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',  # Requires authentication for all views
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (),  # No authentication performed here
+    'DEFAULT_PERMISSION_CLASSES': (),      # No permissions enforced by DRF
 }

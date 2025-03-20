@@ -1,35 +1,11 @@
-import jwt
 from datetime import datetime, timedelta
-from django.conf import settings
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from events.models import Event
 
-ALGORITHM = "HS256"
-# Use your actual secret key from settings
-SECRET_KEY = settings.SECRET_KEY
-
 class EventAPITestCase(APITestCase):
     def setUp(self):
-        # Generate JWT tokens for two test users
-        payload1 = {
-            "sub": "test_user_00",  # This token represents test_user_00
-            "exp": datetime.utcnow() + timedelta(hours=1),
-            "roles": [["community_01", "member"]]
-        }
-        self.token1 = jwt.encode(payload1, SECRET_KEY, algorithm=ALGORITHM)
-        
-        payload2 = {
-            "sub": "test_user_01",  # This token represents test_user_01
-            "exp": datetime.utcnow() + timedelta(hours=1),
-            "roles": [["community_01", "member"]]
-        }
-        self.token2 = jwt.encode(payload2, SECRET_KEY, algorithm=ALGORITHM)
-
-        # Set default authentication as test_user_00 (token1)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token1}")
-
         # Create a sample event owned by test_user_00
         self.event = Event.objects.create(
             name="Test Event",
@@ -38,7 +14,7 @@ class EventAPITestCase(APITestCase):
             deadline=datetime.now() + timedelta(hours=12),
             location="Test Location",
             max_capacity=100,
-            created_by="test_user_00",  # Using the token's 'sub'
+            created_by="test_user_00",  # Using a simple user identifier
             joined_count=0
         )
 
@@ -48,6 +24,7 @@ class EventAPITestCase(APITestCase):
 
     def test_get_event_list(self):
         """Test retrieving a list of events."""
+        # For GET, query parameter is optional; our view doesn't require user_id on GET
         response = self.client.get(self.event_list_create_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIsInstance(response.data, list)
@@ -55,7 +32,7 @@ class EventAPITestCase(APITestCase):
         self.assertGreaterEqual(len(response.data), 1)
 
     def test_create_event(self):
-        """Test creating a new event using JWT auth."""
+        """Test creating a new event using query parameter for user_id."""
         new_event_data = {
             "name": "New Event",
             "description": "New event description",
@@ -63,13 +40,15 @@ class EventAPITestCase(APITestCase):
             "deadline": (datetime.now() + timedelta(days=2, hours=12)).isoformat(),
             "location": "New Location",
             "max_capacity": 50,
-            "created_by":"test_user_00",
+            "created_by": "test_user_00",  # This value will be overridden by the query parameter
             "joined_count": 0
         }
-        response = self.client.post(self.event_list_create_url, new_event_data, format='json')
+        # Append the user_id as a query parameter
+        url = f"{self.event_list_create_url}?user_id=test_user_00"
+        response = self.client.post(url, new_event_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['name'], new_event_data['name'])
-        # Verify the view sets created_by using the token's sub (test_user_00)
+        # Verify that the created event's 'created_by' is set to test_user_00 from the query parameter
         self.assertEqual(response.data['created_by'], "test_user_00")
 
     def test_get_event_detail(self):
@@ -83,23 +62,26 @@ class EventAPITestCase(APITestCase):
         update_data = {
             "name": "Updated Test Event"
         }
-        response = self.client.put(self.event_detail_url, update_data, format='json')
+        # Use the query parameter for user_id
+        url = f"{self.event_detail_url}?user_id=test_user_00"
+        response = self.client.put(url, update_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], "Updated Test Event")
 
     def test_update_event_unauthorized(self):
         """Test that a non-owner (test_user_01) cannot update the event."""
-        # Change authentication to test_user_01
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token2}")
         update_data = {
             "name": "Malicious Update"
         }
-        response = self.client.put(self.event_detail_url, update_data, format='json')
+        # Use test_user_01 as the user_id, which should be unauthorized
+        url = f"{self.event_detail_url}?user_id=test_user_01"
+        response = self.client.put(url, update_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_event_authorized(self):
         """Test that the event owner (test_user_00) can delete the event."""
-        response = self.client.delete(self.event_detail_url)
+        url = f"{self.event_detail_url}?user_id=test_user_00"
+        response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # Ensure the event is removed from the database
         self.assertFalse(Event.objects.filter(id=self.event.id).exists())
@@ -119,9 +101,9 @@ class EventAPITestCase(APITestCase):
         )
         another_event_url = reverse('events:event-detail', kwargs={'event_id': another_event.id})
         
-        # Authenticate as test_user_01
-        self.client.credentials(HTTP_AUTHORIZATION=f"Bearer {self.token2}")
-        response = self.client.delete(another_event_url)
+        # Use test_user_01 as the user_id in the query parameter
+        url = f"{another_event_url}?user_id=test_user_01"
+        response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         # Confirm the event still exists
         self.assertTrue(Event.objects.filter(id=another_event.id).exists())
