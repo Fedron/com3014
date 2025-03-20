@@ -4,8 +4,8 @@
 
 - **Endpoint:** `api/v1/events/`
 - **Methods:**
-  - **GET:** Retrieves a list of all events. Requires a valid JWT token.
-  - **POST:** Creates a new event. Requires a valid JWT token. The `created_by` field is set based on the JWT token's subject.
+  - **GET:** Retrieves a list of all events. Does not require a user_id.
+  - **POST:** Creates a new event. Requires a `user_id` query parameter; the `created_by` field is set based on the provided `user_id`.
 
 ---
 
@@ -13,9 +13,9 @@
 
 - **Endpoint:** `api/v1/events/<int:event_id>/`
 - **Methods:**
-  - **GET:** Retrieves detailed information for the specified event. Requires a valid JWT token.
-  - **PUT:** Updates an existing event. Requires a valid JWT token and can only be performed by the event's creator.
-  - **DELETE:** Deletes the specified event. Requires a valid JWT token and can only be performed by the event's creator.
+  - **GET:** Retrieves detailed information for the specified event.
+  - **PUT:** Updates an existing event. Requires a `user_id` query parameter and can only be performed by the event's creator.
+  - **DELETE:** Deletes the specified event. Requires a `user_id` query parameter and can only be performed by the event's creator.
 
 # Docker Instructions for Event Service
 
