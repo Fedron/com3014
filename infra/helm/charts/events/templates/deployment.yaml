@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-events-service
+  labels:
+    app: {{ .Release.Name }}-events-service
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-events-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-events-service
+    spec:
+      containers:
+      - name: events-service
+        image: "events-service:latest"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - name: event-db
+          mountPath: /app/db
+      volumes:
+      - name: event-db
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-events-db-pvc

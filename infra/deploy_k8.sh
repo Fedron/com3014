@@ -8,13 +8,20 @@ cleanup() {
 
 trap cleanup SIGINT
 
-minikube stop
-minikube start --cpus=4 --memory=4096 --disk-size=20g
+# docker build -t auth-service:latest -f services/auth-service/Dockerfile .
+# docker build -t api-gateway:latest -f api-gateway/Dockerfile .
 
-minikube image load auth-service
-minikube image load api-gateway
+# cd services/event_service
+# docker build -t events-service:latest .
 
-cd infra/helm/umbrella-chart
+# minikube stop
+# minikube start --cpus=4 --memory=4096 --disk-size=20g
+
+# minikube image load auth-service
+# minikube image load events-service
+# minikube image load api-gateway
+
+cd ./infra/helm/umbrella-chart
 helm dependency update
 helm uninstall antto
 helm install antto ./
