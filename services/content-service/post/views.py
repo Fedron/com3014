@@ -7,16 +7,20 @@ from .serializers import PostSerializer
 
 
 @api_view(['GET', 'POST'])
-def post_list_create(request):
+def post_list_create(request, community_id):
     """
-    Provides a list of all posts or creates a new one.
+    Provides a list of all posts of this community, or creates a new one.
     """
     if request.method == 'GET':
-        posts = Post.objects.all()
+        posts = Post.objects.filter(community = community_id)
         serializer = PostSerializer(posts, many = True)
         return Response(serializer.data)
     
     elif request.method == 'POST':
+        user_id = request.GET.get('user_id')
+        if not user_id:
+            return Response({'error': 'Missing user_id query parameter'}, status=status.HTTP_400_BAD_REQUEST)
+        
         serializer = PostSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
