@@ -23,10 +23,21 @@ echo "Building events-service docker image"
 cd services/event_service
 docker build -t events-service:latest .
 
+echo "Deploying ANTTO"
 cd ./infra/helm/umbrella-chart
 helm dependency update
 helm uninstall antto
 helm install antto ./
+
+echo "Deploying observability stack"
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+
+kubectl patch svc prometheus-grafana -n monitoring -p '{"spec": {"type": "LoadBalancer"}}'
+
+kubectl --namespace monitoring get secrets prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo
 
 echo "Starting Minikube Tunnel... Press Ctrl+C to stop."
 minikube tunnel &
