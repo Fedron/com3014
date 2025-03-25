@@ -76,7 +76,7 @@ def comment_list_create(request, post_id):
 @api_view(['GET', 'PUT', 'DELETE'])
 def comment_details(request, comment_id):
     """
-    Retrieve, update and delete requests using a provided post id.
+    Retrieve, update and delete requests using a provided comment id.
     """
     try:
         comment = Post.objects.get(id = comment_id)
