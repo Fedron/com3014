@@ -10,6 +10,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 mod auth;
 mod docs;
 mod error;
+mod events;
 mod state;
 
 #[tokio::main]
@@ -32,7 +33,12 @@ async fn main() -> Result<(), AppError> {
 
     let app = ApiRouter::new()
         .nest_api_service("/docs", docs_routes(state.clone()))
-        .nest_api_service("/v1", auth::routes(state.clone()))
+        .nest_api_service(
+            "/v1",
+            ApiRouter::new()
+                .merge(auth::routes(state.clone()))
+                .merge(events::routes(state.clone())),
+        )
         .finish_api_with(&mut api, api_docs)
         .layer(Extension(Arc::new(api)))
         .with_state(state);

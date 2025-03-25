@@ -11,10 +11,19 @@ trap cleanup SIGINT
 minikube stop
 minikube start --cpus=4 --memory=4096 --disk-size=20g
 
-minikube image load auth-service
-minikube image load api-gateway
+eval $(minikube docker-env)
 
-cd infra/helm/umbrella-chart
+echo "Building auth-service docker image"
+docker build -t auth-service:latest -f services/auth-service/Dockerfile .
+
+echo "Building API Gateway docker image"
+docker build -t api-gateway:latest -f api-gateway/Dockerfile .
+
+echo "Building events-service docker image"
+cd services/event_service
+docker build -t events-service:latest .
+
+cd ./infra/helm/umbrella-chart
 helm dependency update
 helm uninstall antto
 helm install antto ./

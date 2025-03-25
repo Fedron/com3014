@@ -1,14 +1,16 @@
+use aide::OperationIo;
 use axum::{RequestPartsExt, extract::FromRequestParts, http::request::Parts};
 use axum_extra::{
     TypedHeader,
     headers::{Authorization, authorization::Bearer},
 };
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use uuid::Uuid;
 
 use crate::{error::TokenError, jwt::validate_jwt};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, JsonSchema, OperationIo)]
 pub struct Claims<R> {
     pub sub: Uuid,
     pub exp: usize,

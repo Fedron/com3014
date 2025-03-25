@@ -18,16 +18,23 @@ spec:
       containers:
       - name: api-gateway
         image: "api-gateway:latest"
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
         env:
         - name: AUTH_SERVICE_HOST
           value: "auth-service"
+        - name: EVENTS_SERVICE_HOST
+          value: "events-service"
         - name: HOST
           value: "0.0.0.0"
         - name: PORT
           value: "80"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-auth-secrets
+              key: JWT_SECRET
         resources:
           limits:
             cpu: 500m
