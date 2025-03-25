@@ -16,13 +16,21 @@ def community_list_create(request):
         return Response(serializer.data)
     
     elif request.method == 'POST':
+        if request.POST.get('members'):
+            return Response({'error': 'Do not attempt to define members field'}, status = status.HTTP_400_BAD_REQUEST)
+        
         serializer = CommunitySerializer(data = request.data)
-        print(request.data)
+
         if serializer.is_valid():
             print(serializer)
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+        
+        response = {
+            'error': 'Invalid input',
+            'invalid_field': serializer.errors
+        }
+        return Response(response, status = status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def community_details(request, community_id):
@@ -39,11 +47,20 @@ def community_details(request, community_id):
         return Response(serializer.data)
     
     elif request.method == 'PUT':
+        if request.POST.get('members'):
+            return Response({'error': 'Do not attempt to define members field'}, status = status.HTTP_400_BAD_REQUEST)
+        
         serializer = CommunitySerializer(community, data = request.data, partial = True)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+        
+        response = {
+            'error': 'Invalid input',
+            'invalid_field': serializer.errors
+        }
+        return Response(response, status = status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
         community.delete()
