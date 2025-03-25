@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Post
-from .serializers import PostSerializer
+from .models import Post, Comment
+from .serializers import PostSerializer, CommentSerializer
 
 
 @api_view(['GET', 'POST'])
@@ -23,7 +23,7 @@ def post_list_create(request, community_id):
         
         serializer = PostSerializer(data = request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(created_by = str(user_id), community = str(community_id))
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
@@ -50,4 +50,50 @@ def post_details(request, post_id):
     
     elif request.method == 'DELETE':
         post.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET', 'POST'])
+def comment_list_create(request, post_id):
+    """
+    Provides a list of all comments of this post, or creates a new one.
+    """
+    if request.method == 'GET':
+        comments = Comment.objects.filter(post = post_id)
+        serializer = CommentSerializer(comments, many = True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        user_id = request.GET.get('user_id')
+        if not user_id:
+            return Response({'error': 'Missing user_id query parameter'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = CommentSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save(created_by = str(user_id), post = str(post_id))
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET', 'PUT', 'DELETE'])
+def comment_details(request, comment_id):
+    """
+    Retrieve, update and delete requests using a provided post id.
+    """
+    try:
+        comment = Post.objects.get(id = comment_id)
+    except Post.DoesNotExist:
+        return Response({'error': 'No comment with given id found'}, status = status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = PostSerializer(comment)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = CommentSerializer(comment, data = request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        comment.delete()
         return Response(status = status.HTTP_204_NO_CONTENT)
