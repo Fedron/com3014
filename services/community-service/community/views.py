@@ -17,7 +17,9 @@ def community_list_create(request):
     
     elif request.method == 'POST':
         serializer = CommunitySerializer(data = request.data)
+        print(request.data)
         if serializer.is_valid():
+            print(serializer)
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

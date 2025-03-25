@@ -14,10 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
+from community.views import community_details, community_list_create
+from user.views import user_details, user_join_community, user_leave_community
+
+v1_patterns = [
+    path('communities/', community_list_create, name = 'community-list-create'),
+    path('communities/<int:community_id>/', community_details, name = 'community-details'),
+    path('user/<int:user_id>/', user_details, name = 'user-details'),
+    path('user/join/', user_join_community, name = 'user-join-community'),
+    path('user/leave/', user_leave_community, name = 'user-leave-community'),
+]
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('v1/communities/', include('community.urls'))
+    path('v1/', include(v1_patterns)),
 ]
