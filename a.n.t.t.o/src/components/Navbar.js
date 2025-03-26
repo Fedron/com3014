@@ -1,6 +1,6 @@
 import Link from 'next/link';
 // import Room from '@/components/Room'
-
+//Test
 const Navbar = ({ isLoggedIn }) => {
     return (
         <header className="h-20 font-heading navbar bg-primary text-primary-content drop-shadow-md w-full z-40">
