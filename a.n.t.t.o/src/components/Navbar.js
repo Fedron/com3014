@@ -1,27 +1,28 @@
 import Link from 'next/link';
 // import Room from '@/components/Room'
-//Test
+
 const Navbar = ({ isLoggedIn }) => {
     return (
-        <header className="h-20 font-heading navbar bg-primary text-primary-content drop-shadow-md w-full z-40">
-                <div className="w-full max-w-[1280px] mx-auto ps-5">
+        <header className="h-24 font-heading navbar bg-primary text-primary-content drop-shadow-md w-full z-40">
+                <div className="w-full max-w-[1280px] mx-auto ps-5 top-4 ">
                     <div className="navbar-start">
-                        <div className="w-40 absolute left-[30px] top-2 z-10">
+                        <div className="w-40 absolute left-[30px] top-4 z-10 mx-28">
                         <a href="/">
                             <img src="/ANTTO.png" fill="true" /> 
                         </a>
                         </div>
+                        <h1 className="mx-20 font-heading font-bold text-3xl">A.N.T.T.O</h1>
                     </div>
 
-                    <div className="hidden font-medium justify-between navbar-center lg:flex ">
-                        <ul className="px-1 menu menu-horizontal">
+                    <div className="sm-hidden font-medium lg-flex menu ml-[30rem]">
+                        <ul className="menu-horizontal ">
                             <li><Link href="/home">Home</Link></li>
                             <li><Link href="/appointments">Communitites</Link></li>
                             <li><Link href="/opportunities">Events</Link></li>
                         </ul>
                     </div>
 
-                    <div className="navbar-end flex">
+                    <div className="navbar-end flex ml-28">
                         {isLoggedIn ? (
                             <div className="dropdown dropdown-bottom dropdown-end">
                                 <div tabIndex={0} role="button" className="btn m-1 btn-ghost btn-square">
@@ -49,9 +50,9 @@ const Navbar = ({ isLoggedIn }) => {
                                     </Link>
                                 </div>
                             ) : (
-                                <div className='pe-5'>
-                                    <Link href="/sign-in" className="mr-1 font-medium btn btn-ghost btn-sm">Sign in</Link>
-                                    <Link href="/sign-up" className="font-medium btn btn-outline btn-primary btn-sm">Sign up</Link>
+                                <div className="pe-5 flex items-center space-x-2 -ml-16">
+                                    <Link href="/sign-in" className="mr-1 font-medium btn btn-sm btn-secondary ">Sign in</Link>
+                                    <Link href="/sign-up" className="font-medium btn btn-outline btn-primary-content btn-sm text-base-100">Sign up</Link>
                                 </div>
                             )}
                         </div>
@@ -63,10 +64,9 @@ const Navbar = ({ isLoggedIn }) => {
                                 </svg>
                             </div>
                             <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                                <li><Link href="/opportunities">Opportunities</Link></li>
-                                <li><Link href="/appointments">Appointments</Link></li>
-                                <li><Link href="/mentoring">Mentoring</Link></li>
-                                <li><Link href="/skills">Skills</Link></li>
+                                    <li><Link href="/home">Home</Link></li>
+                                    <li><Link href="/appointments">Communitites</Link></li>
+                                    <li><Link href="/opportunities">Events</Link></li>
                                 <div className="my-1 divider"></div>
                                 {isLoggedIn ? (
                                     <>
@@ -74,7 +74,7 @@ const Navbar = ({ isLoggedIn }) => {
                                     </>
                                 ) : (
                                     <>
-                                        <button className="btn btn-sm btn-primary text-base-100 w-full">
+                                        <button className="btn btn-sm btn-secondary text-base-100 w-full">
                                             <Link href="/sign-in">Sign in</Link>
                                         </button>
                                     </>
