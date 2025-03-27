@@ -1,5 +1,5 @@
 'use client';
-import Frame from '@/components/Frame';
+import Frame3 from '@/components/Frame3';
 import ProfileCard from '@/components/ProfileCard';
 import SkillPopUp from '@/components/SkillPopUp';
 import Tag from '@/components/Tag';
@@ -7,7 +7,7 @@ import Tag from '@/components/Tag';
 export default function Profile() {
     return (
         <main>
-            <Frame pageTitle="Profile">
+            <Frame3 pageTitle="Profile" imageUrl="default_profile_banner.jpg">
                 <div className="mx-[2%]"></div>
                     <ProfileCard imageUrl="default_profile.png" name="Punam Gurung" emailAddress="pg061@surrey.ac.uk" course="BSc Computer Science" gradYear="2024" />
                     <div className="mt-6 card rounded-none lg:card-side bg-base-100">
@@ -38,7 +38,7 @@ export default function Profile() {
                         </div>
                     </div>
                     </div>
-            </Frame>
+            </Frame3>
         </main>
     );
 }

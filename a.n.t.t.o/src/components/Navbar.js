@@ -6,15 +6,15 @@ const Navbar = ({ isLoggedIn }) => {
         <header className="h-24 font-heading navbar bg-primary text-primary-content drop-shadow-md w-full z-40">
                 <div className="w-full max-w-[1280px] mx-auto ps-5 top-4 ">
                     <div className="navbar-start">
-                        <div className="w-40 absolute left-[30px] top-4 z-10 mx-28">
-                        <a href="/">
-                            <img src="/ANTTO.png" fill="true" /> 
-                        </a>
+                        <div className="w-40 absolute left-[30px] top-4 z-10 mx-28 ">
+                            <a href="/">
+                                <img src="/ANTTO.png" alt="logo"/> 
+                            </a>
                         </div>
-                        <h1 className="mx-20 font-heading font-bold text-3xl">A.N.T.T.O</h1>
+                        <h1 className="mx-20 font-heading font-bold text-3xl ">A.N.T.T.O</h1>
                     </div>
 
-                    <div className="sm-hidden font-medium lg-flex menu ml-[30rem]">
+                    <div className="sm-hidden font-medium lg-flex menu ml-[30rem] ">
                         <ul className="menu-horizontal ">
                             <li><Link href="/home">Home</Link></li>
                             <li><Link href="/appointments">Communitites</Link></li>
