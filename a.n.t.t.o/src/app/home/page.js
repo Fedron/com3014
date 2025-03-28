@@ -1,4 +1,4 @@
-import Frame from '@/components/Frame';
+import Frame2 from '@/components/Frame2';
 import Filter from '@/components/Filter';
 import FilterOption from '@/components/FilterOption';
 import MentoringCard from '@/components/MentoringCard';
@@ -10,7 +10,7 @@ import CheckboxOption from '@/components/CheckboxOption';
 export default function Home() {
     return (
         <main>
-            <Frame imageUrl="/mentoring.jpg" pageTitle="Home">
+            <Frame2 imageUrl="/mentoring.jpg" pageTitle="Home">
             <div className="relative mx-[2%]">
                 <div className='my-4 grid grid-cols-5 gap-4 '>
                     <div className='container'>
@@ -51,7 +51,7 @@ export default function Home() {
                     </div>  
                 </div>
             </div>
-            </Frame>
+            </Frame2>
         </main>
     );
 }

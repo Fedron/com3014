@@ -4,8 +4,8 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 
 export const metadata = {
-  title: "Surrey Lighthouse",
-  description: "An engaging web application that will help job-ready graduates and undergraduates to find job and placement opportunities and provide personalised support.",
+  title: "A.N.T.T.O",
+  description: "An education focused social media platform for people who are enthusiastic about learning new skills or topics.",
 };
 
 export default function RootLayout({ children }) {
