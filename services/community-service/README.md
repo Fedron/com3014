@@ -2,8 +2,22 @@
 Community microservice for A.N.T.T.O. for high-level management of and tracking user membership of communities. Uses Django and Django Rest Framework.
 
 ## Building & Running
-`TODO`
-
+### Build Docker Image
+```bash
+docker build -t community-service:latest -f services/community-service/Dockerfile .
+```
+*Assumes command is run from repository root.*
+### Running the Docker Image in a Container
+```bash
+docker run -p "8000:8000" community-service
+```
+*The microservice will be accessible at `0.0.0.0:8000` by default.*
+#### Optional Environment Variables
+- `SECRET_KEY` - Secret key used by Django. Defaults to a Django insecure so should be changed in production.
+- `DEBUG` - Debug mode should be disabled for production. Defaults to True.
+- `ALLOWED_HOSTS` - List of allowed hosts for Django, split by commas. Default only includes `0.0.0.0`.
+- `HOST` - Host for the service to run on. Defaults to `0.0.0.0`.
+- `PORT` - Port for the service to run on. Defaults to 8000.
 # API Endpoints
 *All requests should include the final / to ensure Django doesn't raise an error.*
 ## Retrieving a List of All Communities

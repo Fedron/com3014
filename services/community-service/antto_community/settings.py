@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,18 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(u_pjq9wmz^f%eo9ehq598z-em43u95(kymyd!g@f6z@87*qb!'
+SECRET_KEY = os.environ.get('SECRET_KEY', default = 'django-insecure-(u_pjq9wmz^f%eo9ehq598z-em43u95(kymyd!g@f6z@87*qb!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', default = True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '0.0.0.0').split(',')
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'channels',
+    'channels_redis',
     'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -55,11 +57,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer'
     }
 }
+
 
 ROOT_URLCONF = 'antto_community.urls'
 
@@ -84,6 +88,7 @@ ASGI_APPLICATION = 'antto_community.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
 
 DATABASES = {
     'default': {
