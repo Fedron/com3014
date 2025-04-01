@@ -7,6 +7,7 @@ from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.http import Http404
 
 #Provides a list of all posts of this community, or creates a new one.
 class PostListCreateAPIView(generics.ListCreateAPIView):
@@ -14,7 +15,11 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
     
     def get_queryset(self):
         community_id = self.kwargs['community_id']
-        return Post.objects.filter(community=community_id)
+        post_list = Post.objects.filter(community=community_id)
+        if post_list.count() == 0:
+            raise Http404
+        else:
+            return post_list
 
 #Retrieve, update and delete requests using a provided post id.
 class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -33,7 +38,11 @@ class CommentListCreateAPIView(generics.ListCreateAPIView):
     
     def get_queryset(self):
         post_id = self.kwargs['post_id']
-        return Comment.objects.filter(post=post_id)
+        try:
+            post = Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            raise Http404
+        return Comment.objects.filter(post=post)
 
 #Retrieve, update and delete requests using a provided comment id.
 class CommentDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
