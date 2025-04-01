@@ -63,6 +63,8 @@ def user_join_community(request):
                 user.save()
             except ValidationError:
                     return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
+        except ValueError:
+            return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
             
         try:
             community = Community.objects.get(id = cid)
@@ -90,6 +92,8 @@ def user_leave_community(request):
                 user.save()
             except ValidationError:
                     return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
+        except ValueError:
+            return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
             
         try:
             community = Community.objects.get(id = cid)

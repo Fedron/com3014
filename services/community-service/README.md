@@ -218,7 +218,8 @@ community_id: the community's id (int)
 ```
 ## Live Chat
 The live chat endpoint is a WebSocket at endpoint `/v1/communities/<int:community_id>/chat/`. The connection will be rejected if a community cannot be found using the provided ID. All messages are sent as JSONs.
-### Send a Message
+### Messages Sent to the Server
+#### Send a Message
 ```json
 {
     "type": "chat.send",
@@ -227,7 +228,7 @@ The live chat endpoint is a WebSocket at endpoint `/v1/communities/<int:communit
     "message": "the message to be sent"
 }
 ```
-### Potential Messages Sent by the Server
+### Messages Sent by the Server
 #### Receiving a Message
 ```json
 {
