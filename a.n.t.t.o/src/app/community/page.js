@@ -6,16 +6,16 @@ import Tag from '@/components/Tag';
 import Community from '@/components/Community';
 import PostCard from '@/components/PostCard';
 import CheckboxOption from '@/components/CheckboxOption';
+import PostCreationBox from '@/components/PostCreationBox';
 
 export default function Home() {
     return (
         <main>
-            <Frame imageUrl="/mentoring.jpg" pageTitle="Home">
+            <Frame imageUrl="/mentoring.jpg" pageTitle="CommunityName">
             <div className="relative mx-[2%]">
                 <div className='my-4 grid grid-cols-5 gap-4 '>
                     <div className='container'>
-                    <CheckboxOption option="Subscribed Only" />
-                        <Filter filterName="Community Type">
+                        <Filter filterName="Post Type">
                             <FilterOption option="Engineering" />
                             <FilterOption option="HR and recruitment" />
                         </Filter>
@@ -28,9 +28,8 @@ export default function Home() {
                         </Filter>
                     </div>
                     <div className='col-span-3'>
-                        <div className='grid grid-cols-5'>
-                            <div className='font-heading text-sm'>1 to 50 of 1307 results</div>
-                        </div>
+                        <PostCreationBox></PostCreationBox>
+                        <div className='font-heading text-sm'>1 to 50 of 1307 results</div>
                         <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc={"F"} comments={"100"} likedislike={"-100"}>
                         </PostCard>
                         <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc={"F"} comments={"100"} likedislike={"-100"}>
@@ -41,7 +40,7 @@ export default function Home() {
                         </PostCard>
                     </div>
                     <div className='container'>
-                        <h1>Popular Communitites</h1>
+                        <h1>Related Communities</h1>
                         <Community imageUrl="default_profile.png" name="Physics" membercount="2035">
                         </Community>
                         <Community imageUrl="default_profile.png" name="Pottery" membercount="463">
