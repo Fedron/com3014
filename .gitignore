@@ -1,4 +1,4 @@
 .env
 target
 __pycache__/
-db.sqlite3
+community-db.sqlite3

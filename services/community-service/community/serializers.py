@@ -8,7 +8,3 @@ class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Community
         fields = ['id', 'name', 'desc', 'members']
-
-    #def create(self, validated_data):
-        #print(validated_data)
-        #return Community(**validated_data)

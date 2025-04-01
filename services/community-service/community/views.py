@@ -22,7 +22,6 @@ def community_list_create(request):
         serializer = CommunitySerializer(data = request.data)
 
         if serializer.is_valid():
-            print(serializer)
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         

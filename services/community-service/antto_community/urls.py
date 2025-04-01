@@ -17,11 +17,13 @@ Including another URLconf
 from django.urls import path, include
 from community.views import community_details, community_list_create
 from user.views import user_details, user_join_community, user_leave_community
+from live_chat.views import user_logs
 
 v1_patterns = [
     path('communities/', community_list_create, name = 'community-list-create'),
     path('communities/<int:community_id>/', community_details, name = 'community-details'),
     path('user/<int:user_id>/', user_details, name = 'user-details'),
+    path('user/<int:user_id>/logs/', user_logs, name = 'user-logs'),
     path('user/join/', user_join_community, name = 'user-join-community'),
     path('user/leave/', user_leave_community, name = 'user-leave-community'),
 ]

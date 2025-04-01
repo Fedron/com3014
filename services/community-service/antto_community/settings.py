@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'community',
     'user',
+    'live_chat',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +54,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 ROOT_URLCONF = 'antto_community.urls'
 
@@ -70,7 +79,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'antto_community.wsgi.application'
+ASGI_APPLICATION = 'antto_community.asgi.application'
 
 
 # Database
@@ -79,7 +88,7 @@ WSGI_APPLICATION = 'antto_community.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'community-db.sqlite3',
     }
 }
 

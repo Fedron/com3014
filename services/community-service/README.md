@@ -151,8 +151,8 @@ desc: new description for the community (String, optional)
 ### Request
 `POST /v1/user/join/`
 ```
-user_id: the user's id
-community_id: the community's id
+user_id: the user's id (int)
+community_id: the community's id (int)
 ```
 ### Response (Valid)
 `HTTP/1.1 200 OK`
@@ -174,8 +174,8 @@ community_id: the community's id
 ### Request
 `POST /v1/user/leave/`
 ```
-user_id: the user's id
-community_id: the community's id
+user_id: the user's id (int)
+community_id: the community's id (int)
 ```
 ### Response (Valid)
 `HTTP/1.1 200 OK`
@@ -193,3 +193,56 @@ community_id: the community's id
     "error": "No community with given id found"
 }
 ```
+## Get a User's Chat Logs
+### Request
+`GET /v1/user/<int:user_id>/logs/`
+### Response
+`HTTP/1.1 200 OK`
+```json
+[
+    {
+        "message": "the message the user sent",
+        "sent": "DateTimeStamp when message was sent",
+        "sent_in": "community id the message was sent in"
+    },
+
+    ...
+]
+```
+### Response (Invalid)
+`HTTP/1.1 400 Bad Request`
+```json
+{
+    "error": "Invalid user ID"
+}
+```
+## Live Chat
+The live chat endpoint is a WebSocket at endpoint `/v1/communities/<int:community_id>/chat/`. The connection will be rejected if a community cannot be found using the provided ID. All messages are sent as JSONs.
+### Send a Message
+```json
+{
+    "type": "chat.send",
+    "user_id": "the user's id",
+    "username": "the user's username",
+    "message": "the message to be sent"
+}
+```
+### Potential Messages Sent by the Server
+#### Receiving a Message
+```json
+{
+    "type": "chat.message",
+    "username": "the username of the sender",
+    "message": "the message that was sent"
+}
+```
+#### Receiving an Error
+```json
+{
+    "type": "chat.error",
+    "error": "the error"
+}
+```
+Potential errors:
+- `Invalid user ID`
+- `Unable to log message; message not sent` - Caused when a ValidationError is raised when creating a ChatLog error, this is most likely caused by the message being blank.
