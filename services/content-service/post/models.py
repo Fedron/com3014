@@ -4,13 +4,12 @@ from django.db import models
 class Post(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    date_created = models.DateTimeField(auto_now_add = True)
-    community = models.CharField(max_length=255)
-    created_by = models.CharField(max_length=255)
-    #Add once community branch merged
+    date_created = models.DateTimeField(auto_now_add = True, null=False, blank=False)
+    community = models.CharField(max_length=255, null=False, blank=False)
+    created_by = models.CharField(max_length=255, null=False, blank=False)
 
 class Comment(models.Model):
-    created_by = models.CharField(max_length=255)
-    post = models.CharField(max_length=255)
+    created_by = models.CharField(max_length=255, null=False, blank=False)
+    post = models.ForeignKey(Post, null=False, blank=False, on_delete=models.CASCADE)
     description = models.TextField()
-    date_created = models.DateTimeField(auto_now_add = True)
+    date_created = models.DateTimeField(auto_now_add = True, null=False, blank=False)

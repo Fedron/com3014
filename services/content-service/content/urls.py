@@ -16,8 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from post.views import post_list_create, post_details, comment_list_create, comment_details
+
+v1_patterns = [
+    path('posts/list/<int:community_id>/', post_list_create, name = 'post-list-create'),
+    path('posts/<int:post_id>/', post_details, name = 'post-details'),
+    path('comments/list/<int:post_id>/', comment_list_create, name = 'comment-list-create'),
+    path('comments/<int:comment_id>/', comment_details, name = 'comment-details')
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/posts/', include('post.urls'))
+    path('__debug__/', include("debug_toolbar.urls")),
+    path('v1/', include(v1_patterns)),
 ]

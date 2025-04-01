@@ -4,7 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 @api_view(['GET', 'POST'])
 def post_list_create(request, community_id):

@@ -1,2 +1,4 @@
 .env
 target
+services/content-service/db.sqlite3
+dump.rdb
