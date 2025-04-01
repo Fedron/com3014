@@ -7,9 +7,10 @@ class Post(models.Model):
     date_created = models.DateTimeField(auto_now_add = True, null=False, blank=False)
     community = models.CharField(max_length=255, null=False, blank=False)
     created_by = models.CharField(max_length=255, null=False, blank=False)
+    #Add once community branch merged
 
 class Comment(models.Model):
     created_by = models.CharField(max_length=255, null=False, blank=False)
-    post = models.ForeignKey(Post, null=False, blank=False, on_delete=models.CASCADE)
+    post = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField()
     date_created = models.DateTimeField(auto_now_add = True, null=False, blank=False)
