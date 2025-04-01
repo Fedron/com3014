@@ -124,7 +124,16 @@ desc: new description for the community (String, optional)
 ```json
 {
     "user_id": "user id",
-    "communities": ["list of community ids"]
+    "communities": [
+        {
+            "id": "community id",
+            "name": "community name",
+            "desc": "community description",
+            "members": "number of members"
+        },
+
+        ...
+    ]
 }
 ```
 ### Response (Invalid)

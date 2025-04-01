@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import ValidationError
 from .models import User
 from community.models import Community
+from community.serializers import CommunitySerializer
 
 
 @api_view(['GET', 'DELETE'])
@@ -24,14 +25,12 @@ def user_details(request, user_id):
             except ValidationError:
                 return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
 
-        communities = []
+        communities = user.community_set.all()
+        serializer = CommunitySerializer(communities, many = True)
 
-        for community in user.community_set.all():
-            communities.append(community.id)
-        
         response = {
             'user_id': user_id,
-            'communities': communities
+            'communities': serializer.data
         }
 
         return Response(response)
