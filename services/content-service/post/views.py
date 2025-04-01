@@ -8,6 +8,7 @@ from .serializers import PostSerializer, CommentSerializer
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 
+#Provides a list of all posts of this community, or creates a new one.
 class PostListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     
@@ -15,23 +16,35 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
         community_id = self.kwargs['community_id']
         return Post.objects.filter(community=community_id)
 
+#Retrieve, update and delete requests using a provided post id.
 class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     lookup_url_kwarg = "post_id"
 
+    #Cache GET request with TTL of 60 mins
+    @method_decorator(cache_page(60 * 60, key_prefix='post_detail'))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+#Provides a list of all comments of this post, or creates a new one.
 class CommentListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     
     def get_queryset(self):
         post_id = self.kwargs['post_id']
-        post = Post.objects.get(pk=post_id)
         return Comment.objects.filter(post=post_id)
 
+#Retrieve, update and delete requests using a provided comment id.
 class CommentDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     lookup_url_kwarg = "comment_id"
+
+    #Cache GET request with TTL of 60 mins
+    @method_decorator(cache_page(60 * 60, key_prefix='comment_detail'))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
 # @api_view(['GET', 'POST'])
 # def post_list_create(request, community_id):
