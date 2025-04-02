@@ -46,7 +46,7 @@ def community_details(request, community_id):
         return Response(serializer.data)
     
     elif request.method == 'PUT':
-        if request.POST.get('members'):
+        if request.data.get('members'):
             return Response({'error': 'Do not attempt to define members field'}, status = status.HTTP_400_BAD_REQUEST)
         
         serializer = CommunitySerializer(community, data = request.data, partial = True)
