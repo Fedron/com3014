@@ -76,7 +76,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 user.save()
             except ValidationError:
                 return False, 'Invalid user ID'
-        except ValueError:
+        except (ValueError, ValidationError):
             return False, 'Invalid user ID'
         
         try:

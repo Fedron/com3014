@@ -22,6 +22,8 @@ def user_logs(request, user_id):
                 user.save()
             except ValidationError:
                 return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
+        except (ValueError, ValidationError):
+                return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
 
         logs = ChatLog.objects.filter(user = user)
         serializer = ChatLogSerializer(logs, many = True)

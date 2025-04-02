@@ -1,3 +1,4 @@
+import uuid
 from asgiref.sync import sync_to_async
 from django.test import TestCase
 from django.urls import path
@@ -12,7 +13,7 @@ from .consumers import ChatConsumer
 class LiveChatTestCase(TestCase):
     @sync_to_async
     def chatSetUp(self):
-        user = User(uid = 1)
+        user = User(uid = uuid.uuid4())
         user.full_clean()
         user.save()
         self.user = user
@@ -43,7 +44,7 @@ class LiveChatTestCase(TestCase):
 
         valid = {
             'type': 'chat.send',
-            'user_id': self.user.uid,
+            'user_id': str(self.user.uid),
             'username': 'testUser',
             'message': 'testMessage'
         }
@@ -76,7 +77,7 @@ class LiveChatTestCase(TestCase):
 
         invalid = {
             'type': 'chat.send',
-            'user_id': self.user.uid,
+            'user_id': str(self.user.uid),
             'username': 'testUser',
             'message': ''
         }

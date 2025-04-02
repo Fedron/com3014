@@ -132,7 +132,7 @@ desc: new description for the community (String, optional)
 ```
 ## Get all Communities a User is a Member of
 ### Request
-`GET /v1/user/<int:user_id>/`
+`GET /v1/user/<uuid:user_id>/`
 ### Response (Valid)
 `HTTP/1.1 200 OK`
 ```json
@@ -159,14 +159,14 @@ desc: new description for the community (String, optional)
 ```
 ## Delete a User
 ### Request
-`DELETE /v1/user/<int:user_id>/`
+`DELETE /v1/user/<uuid:user_id>/`
 ### Response (Valid)
 `HTTP/1.1 204 No Content`
 ### Response (Not Found)
 `HTTP/1.1 404 Not Found`
 ```json
 {
-    "error": "Object with given UID not found"
+    "error": "Object with given UUID not found"
 }
 ```
 **NOTE:** *A user object is only created if the user id is looked up or the user has joined/left a community. A 404 response is therefore possible even with a valid user id.*
@@ -174,7 +174,7 @@ desc: new description for the community (String, optional)
 ### Request
 `POST /v1/user/join/`
 ```
-user_id: the user's id (int)
+user_id: the user's id (UUID)
 community_id: the community's id (int)
 ```
 ### Response (Valid)
@@ -197,7 +197,7 @@ community_id: the community's id (int)
 ### Request
 `POST /v1/user/leave/`
 ```
-user_id: the user's id (int)
+user_id: the user's id (UUID)
 community_id: the community's id (int)
 ```
 ### Response (Valid)
@@ -218,7 +218,7 @@ community_id: the community's id (int)
 ```
 ## Get a User's Chat Logs
 ### Request
-`GET /v1/user/<int:user_id>/logs/`
+`GET /v1/user/<uuid:user_id>/logs/`
 ### Response
 `HTTP/1.1 200 OK`
 ```json

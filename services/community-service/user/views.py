@@ -24,6 +24,8 @@ def user_details(request, user_id):
                 user.save()
             except ValidationError:
                 return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
+        except (ValueError, ValidationError):
+            return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
 
         communities = user.community_set.all()
         serializer = CommunitySerializer(communities, many = True)
@@ -62,7 +64,7 @@ def user_join_community(request):
                 user.save()
             except ValidationError:
                     return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
-        except ValueError:
+        except (ValueError, ValidationError):
             return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
             
         try:
@@ -91,7 +93,7 @@ def user_leave_community(request):
                 user.save()
             except ValidationError:
                     return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
-        except ValueError:
+        except (ValueError, ValidationError):
             return Response({'error': 'Invalid user ID'}, status = status.HTTP_400_BAD_REQUEST)
             
         try:
