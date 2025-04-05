@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.parsers import FormParser, MultiPartParser
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from django.utils.decorators import method_decorator
@@ -12,6 +13,7 @@ from django.http import Http404
 #Provides a list of all posts of this community, or creates a new one.
 class PostListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
+    parser_classes = [FormParser, MultiPartParser]
     
     def get_queryset(self):
         community_id = self.kwargs['community_id']
@@ -25,6 +27,7 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
 class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    parser_classes = [FormParser, MultiPartParser]
     lookup_url_kwarg = "post_id"
 
     #Cache GET request with TTL of 60 mins

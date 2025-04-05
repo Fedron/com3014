@@ -11,6 +11,16 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(BASE_DIR / '.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +52,8 @@ INSTALLED_APPS = [
     'post.apps.PostConfig',
     'rest_framework',
     'debug_toolbar',
+    'storages',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -137,3 +149,19 @@ CACHES = {
         }
     }
 }
+
+STORAGES = {
+    "default": {
+        "BACKEND" : "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "timeout": 20,
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+AZURE_CONTAINER = env('AZURE_CONTAINER')
+AZURE_ACCOUNT_NAME = env('AZURE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = env('AZURE_ACCOUNT_KEY')

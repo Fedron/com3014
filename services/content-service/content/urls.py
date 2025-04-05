@@ -22,7 +22,7 @@ v1_patterns = [
     path('posts/list/<int:community_id>/', PostListCreateAPIView.as_view(), name = 'post-list-create'),
     path('posts/<int:post_id>/', PostDetailAPIView.as_view(), name = 'post-details'),
     path('comments/list/<int:post_id>/', CommentListCreateAPIView.as_view(), name = 'comment-list-create'),
-    path('comments/<int:comment_id>/', CommentDetailAPIView.as_view(), name = 'comment-details')
+    path('comments/<int:comment_id>/', CommentDetailAPIView.as_view(), name = 'comment-details'),
 ]
 
 urlpatterns = [
