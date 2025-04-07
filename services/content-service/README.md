@@ -21,7 +21,7 @@
 
 ### 3. List & Create Comments
 
-- **Endpoint:** `v1/comments/list/<int:post_id>`
+- **Endpoint:** `v1/comments/list/<int:post_id>/`
 - **Methods:**
   - **GET:** Retrieves a list of all comments for a post.
   - **POST:** Creates a new comment.
