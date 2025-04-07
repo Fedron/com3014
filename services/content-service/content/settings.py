@@ -11,16 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import environ
-import os
-
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-environ.Env.read_env(BASE_DIR / '.env')
+from azure.identity import DefaultAzureCredential
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -154,14 +145,17 @@ STORAGES = {
     "default": {
         "BACKEND" : "storages.backends.azure_storage.AzureStorage",
         "OPTIONS": {
-            "timeout": 20,
+            "token_credential": DefaultAzureCredential(),
+            "account_name": "com3014storage",
+            "azure_container": "media",
         },
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "token_credential": DefaultAzureCredential(),
+            "account_name": "com3014storage",
+            "azure_container": "static",
+        },
     },
 }
-
-AZURE_CONTAINER = env('AZURE_CONTAINER')
-AZURE_ACCOUNT_NAME = env('AZURE_ACCOUNT_NAME')
-AZURE_ACCOUNT_KEY = env('AZURE_ACCOUNT_KEY')
