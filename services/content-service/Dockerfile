@@ -10,4 +10,4 @@ RUN pip install --upgrade pip && \
 ENV HOST="0.0.0.0"
 ENV PORT="8000"
 
-CMD ["sh", "-c", "az login && redis-server && python manage.py makemigrations && python manage.py migrate && python manage.py runserver $HOST:$PORT"]
+CMD ["sh", "-c", "az login && python manage.py makemigrations && python manage.py migrate && python manage.py runserver $HOST:$PORT"]

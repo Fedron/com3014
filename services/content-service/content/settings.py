@@ -12,11 +12,17 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from azure.identity import DefaultAzureCredential
-import os
+import environ
+
+env = environ.Env(  # <-- Updated!
+    # set casting, default value
+    DEBUG=(bool, False),
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -135,7 +141,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get('REDIS_SERVER') #"redis://127.0.0.1:6379/1",
+        "LOCATION": env.str('REDIS_SERVER'), #"redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
