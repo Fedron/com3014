@@ -16,12 +16,19 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
     parser_classes = [FormParser, MultiPartParser]
     
     def get_queryset(self):
+        import time
+        time.sleep(4)
         community_id = self.kwargs['community_id']
         post_list = Post.objects.filter(community=community_id)
         if post_list.count() == 0:
             raise Http404
         else:
             return post_list
+
+    #Cache GET request with TTL of 60 mins
+    @method_decorator(cache_page(60 * 60, key_prefix='post_list'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 #Retrieve, update and delete requests using a provided post id.
 class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -34,6 +41,7 @@ class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     @method_decorator(cache_page(60 * 60, key_prefix='post_detail'))
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
+    
 
 #Provides a list of all comments of this post, or creates a new one.
 class CommentListCreateAPIView(generics.ListCreateAPIView):
