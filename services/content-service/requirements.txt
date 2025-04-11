@@ -1,5 +1,6 @@
 asgiref==3.8.1
 azure-identity==1.21.0
+azure-cli==2.71.0
 Django==5.1.7
 django-cleanup==9.0.0
 django-debug-toolbar==5.1.0

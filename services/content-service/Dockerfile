@@ -1,8 +1,8 @@
 FROM python:3.10.12
 ENV PYTHONBUFFERED=1
 
-COPY ./app
-WORKDIR /app/services/content-services
+COPY . /app
+WORKDIR /app/services/content-service
 
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
