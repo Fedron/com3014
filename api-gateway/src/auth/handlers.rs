@@ -16,7 +16,7 @@ pub async fn signup(
 ) -> Result<Json<SignupResponse>, AuthError> {
     let response = state
         .client
-        .post(format!("http://{}/v1/signup", state.auth_service))
+        .post(format!("{}/signup", state.auth_service()))
         .json(&payload)
         .send()
         .await?
@@ -26,7 +26,7 @@ pub async fn signup(
     if let Some(user_id) = response.get("user_id") {
         let response = state
             .client
-            .post(format!("http://{}/v1/login", state.auth_service))
+            .post(format!("{}/login", state.auth_service()))
             .json(&payload)
             .send()
             .await?
@@ -52,7 +52,7 @@ pub async fn login(
 ) -> Result<Json<LoginResponse>, AuthError> {
     let response = state
         .client
-        .post(format!("http://{}/v1/login", state.auth_service))
+        .post(format!("{}/login", state.auth_service()))
         .json(&payload)
         .send()
         .await?

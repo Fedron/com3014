@@ -1,4 +1,6 @@
 .env
 target
+infra/helm/umbrella-chart/charts/*
+infra/helm/umbrella-chart/Chart.lock
 __pycache__/
-community-db.sqlite3
+*.pyc
