@@ -1,9 +1,6 @@
 'use client';
 import Frame3 from '@/components/Frame3';
-import ProfileCard from '@/components/ProfileCard';
 import ProfileInfoCard from '@/components/ProfileInfoCard';
-import SkillPopUp from '@/components/SkillPopUp';
-import Tag from '@/components/Tag';
 import PostCard from '@/components/PostCard';
 export default function Profile() {
     return (
@@ -17,22 +14,13 @@ export default function Profile() {
                         <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc={"F"} comments={"100"} likedislike={"-100"}></PostCard>
                         <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc={"F"} comments={"100"} likedislike={"-100"}></PostCard>
                     </div>
-
                     <input type="radio" name="my_tabs_2" className="tab text-base bg-base-100" aria-label="Communities"  />
                     <div className="tab-content border-base-300 bg-neutral-content p-5">Tab content 2</div>
 
                     <input type="radio" name="my_tabs_2" className="tab text-base bg-base-100 " aria-label="Friends" />
                     <div className="tab-content border-base-300 bg-neutral-content p-5">Tab content 3</div>
-
                 </div>
-                
-                
-               
-
-
-                        
-                    
-                    
+  
             </Frame3>
         </main>
     );
