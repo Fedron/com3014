@@ -1,4 +1,4 @@
-import Frame from '@/components/Frame';
+import EventFrame from '@/components/EventFrame';
 import SkillCard from '@/components/SkillCard';
 import EventCard from '@/components/EventCard';
 import Tag from '@/components/Tag';
@@ -7,7 +7,7 @@ import FilterOption from '@/components/FilterOption';
 export default function Events() {
     return (
         <main>
-            <Frame imageUrl="/events_banner.png" pageTitle="Events">
+            <EventFrame imageUrl="/events_banner.png" pageTitle="Events">
             <div className="relative">
                 <div className='mx-4 my-6 grid grid-cols-5 gap-4 '>
                     <div className='container'>
@@ -19,8 +19,8 @@ export default function Events() {
                             <FilterOption option="HR and recruitment" />
                         </Filter>     
                         <Filter filterName="Date">
-                            <label for="from">From: </label><input type="date" id="from" />
-                            <label for="to">To: </label><input type="date" id="to" />
+                            <label htmlFor="from">From: </label><input type="date" id="from" />
+                            <label htmlFor="to">To: </label><input type="date" id="to" />
                         </Filter>   
                         <Filter filterName="Location">
                             <FilterOption option="Bath" />
@@ -88,7 +88,7 @@ export default function Events() {
                     
                 </div>
             </div>
-            </Frame>
+            </EventFrame>
         </main>
     );
 }

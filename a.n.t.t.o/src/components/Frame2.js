@@ -1,3 +1,4 @@
+//Frame for community 
 export default function Frame2({ children, imageUrl, pageTitle }) {
 
     return (
