@@ -14,7 +14,7 @@ export default function Events() {
                         <div className="font-heading text-m font-bold mb-2">
                           Filter Section
                         </div>
-                        <Filter filterName="Community">
+                        <Filter filterName="Category">
                             <FilterOption option="Engineering" />
                             <FilterOption option="HR and recruitment" />
                         </Filter>     
