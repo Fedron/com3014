@@ -13,8 +13,8 @@ export default function Events() {
                           Filter Section
                         </div>
                         <Filter filterName="Category">
-                            <FilterOption option="Engineering" />
-                            <FilterOption option="HR and recruitment" />
+                            <FilterOption option="Music" />
+                            <FilterOption option="Maths" />
                         </Filter>     
                         <Filter filterName="Date">
                             <label htmlFor="from">From: </label><input type="date" id="from" />
