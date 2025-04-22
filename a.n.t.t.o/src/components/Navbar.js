@@ -16,7 +16,7 @@ const Navbar = ({ isLoggedIn }) => {
 
                     <div className="sm-hidden font-medium lg-flex menu ml-[30rem] ">
                         <ul className="menu-horizontal ">
-                            <li><Link href="/home">Home</Link></li>
+                            <li><Link href="/">Home</Link></li>
                             <li><Link href="/community">Communitites</Link></li>
                             <li><Link href="/events">Events</Link></li>
                         </ul>
