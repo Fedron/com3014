@@ -1,11 +1,8 @@
 import Frame from '@/components/Frame';
 import Filter from '@/components/Filter';
 import FilterOption from '@/components/FilterOption';
-import MentoringCard from '@/components/MentoringCard';
-import Tag from '@/components/Tag';
 import Community from '@/components/Community';
 import PostCard from '@/components/PostCard';
-import CheckboxOption from '@/components/CheckboxOption';
 import PostCreationBox from '@/components/PostCreationBox';
 
 export default function Home() {
