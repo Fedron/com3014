@@ -1,29 +1,15 @@
-function UserCard({imageUrl,name}) {
+function UserCard({imageurl,name}) {
     return (
-        <div className="card card-side w-full bg-base-100 shadow-sm">
-            <figure>
-                <img
-                className="rounded-full"
-                src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-                alt="Movie" />
-            </figure>
-            <div className="card-body">
-                <h2 className="card-title">New movie is released!</h2>
-                <p>Click the button to watch on Jetflix app.</p>
-           
+        <div className="card card-side h-16 w-64 bg-base-100 shadow-sm">
+            <div className ="ml-3 p-1 ">
+                <div style={{backgroundImage: `url(/images/${imageurl})`}} className="rounded-full w-14 h-14 bg-no-repeat bg-cover bg-center"></div>
+            </div>
+            <div className="card-body justify-center left-20">
+                <h5 className="card-title font-normal  ">{name}</h5>     
             </div>
         </div>
-    //     <div className="my-2 drop-shadow-xl collapse collapse-arrow border border-neutral-focus rounded-lg bg-base-100 w-full">
-    //     {/* <input type="checkbox" id={id} /> */}
-    //       <div className="collapse-title text-sm font-medium">
-    //         {name}
-    //       </div>
-    //     <div className="collapse-content">
-    //       <div className="form-control">
-    //         {/* {children} */}
-    //       </div>
-    //     </div>
-    //   </div>
+
+    // delete homecard 
     )
   }
   export default UserCard;

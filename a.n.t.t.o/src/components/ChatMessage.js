@@ -1,6 +1,6 @@
 export default function ChatMessage({ message }) {
     return (
-        <div class="chat-bubble">
+        <div className="chat-bubble">
             A sample message
         </div>
     );
