@@ -1,7 +1,5 @@
 import EventFrame from '@/components/EventFrame';
-import SkillCard from '@/components/SkillCard';
 import EventCard from '@/components/EventCard';
-import Tag from '@/components/Tag';
 import Filter from '@/components/Filter';
 import FilterOption from '@/components/FilterOption';
 export default function Events() {

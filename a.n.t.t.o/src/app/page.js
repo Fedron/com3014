@@ -1,36 +1,55 @@
-import HomeImage from '@/components/HomeImage';
-import HomeCard from '@/components/HomeCard';
-import EventCard from '@/components/EventPanel';
+import Frame2 from '@/components/Frame2';
+import Filter from '@/components/Filter';
+import FilterOption from '@/components/FilterOption';
+import Community from '@/components/Community';
+import PostCard from '@/components/PostCard';
+import CheckboxOption from '@/components/CheckboxOption';
 
-async function getLatestJobs() {
-  const response = await fetch('http://localhost:8000/getLatestJobs-Json');
-  return response.json();
-}
-
-export default async function Home() {
-
-  const latestJobs = await getLatestJobs();
-
-  return (
-    <main>
-      <HomeImage />
-
-      <div className='my-5 grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-11'>
-        <div className='col-span-8 h-fit lg:pe-7'>
-          <h2 className='my-2 font-medium font-heading text-primary'>Latest Opportunities</h2>
-          <div className='grid grid-cols-1 sm:grid-cols-2'>
-            <HomeCard bgColor="accentBg" headingColor="accentText" btnColor="accentBtn" opportunityTitle={latestJobs.jobLists[0].type} jobTitle={latestJobs.jobLists[0].title} companyName={latestJobs.jobLists[0].company} location={latestJobs.jobLists[0].location}
-                      occupationalArea={latestJobs.jobLists[0].groups.map(element => element.groupName).join("; ")} closingDate={latestJobs.jobLists[0].closingdate} />
-            <HomeCard bgColor="secondaryBg" headingColor="secondaryText" btnColor="secondaryBtn" opportunityTitle={latestJobs.jobLists[1].type} jobTitle={latestJobs.jobLists[1].title} companyName={latestJobs.jobLists[1].company} location={latestJobs.jobLists[1].location}
-                      occupationalArea={latestJobs.jobLists[1].groups.map(element => element.groupName).join("; ")} closingDate={latestJobs.jobLists[1].closingdate} /> 
-          </div>
-        </div>
-        <div className='col-span-4 sm:col-span-3 h-fit mt-4 lg:m-0'>
-          <h2 className='my-2 font-medium font-heading text-primary'>Upcoming Events</h2>
-          <EventCard date="Mon, 4 Mar 2024" eventTitle="Empower HER: Building Confidence For Women in the Workplace" time="6:00 PM - 7:30 PM" location="Virtual event / Webinar"/>
-          <EventCard date="Tue, 5 Mar 2024" eventTitle="Mastering Online Interviews with Unilever" time="6:00 PM - 7:00 PM" location="LTB"/>
-        </div>
-      </div>
-    </main>
-  );
+export default function Home() {
+    return (
+        <main>
+            <Frame2 imageUrl="/mentoring.jpg" pageTitle="Home">
+            <div className="relative mx-[2%]">
+                <div className='my-4 grid grid-cols-5 gap-4 '>
+                    <div className='container'>
+                    <CheckboxOption option="Subscribed Only" />
+                        <Filter filterName="Community Type">
+                            <FilterOption option="Engineering" />
+                            <FilterOption option="HR and recruitment" />
+                        </Filter>
+                        <Filter filterName="Subject Area">
+                            <FilterOption option="Accounting and Finance" />
+                            <FilterOption option="Biosciences" />
+                        </Filter>
+                        <Filter filterName="Activity Level">
+                            <FilterOption option="Ac" />
+                        </Filter>
+                    </div>
+                    <div className='col-span-3'>
+                        <div className='grid grid-cols-5'>
+                            <div className='font-heading text-sm'>1 to 50 of 1307 results</div>
+                        </div>
+                        <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc={"F"} comments={"100"} likedislike={"-100"}>
+                        </PostCard>
+                        <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc={"F"} comments={"100"} likedislike={"-100"}>
+                        </PostCard>
+                        <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc={"F"} comments={"100"} likedislike={"-100"}>
+                        </PostCard>
+                        <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc={"F"} comments={"100"} likedislike={"-100"}>
+                        </PostCard>
+                    </div>
+                    <div className='container'>
+                        <h1>Popular Communitites</h1>
+                        <Community imageUrl="default_profile.png" name="Physics" membercount="2035">
+                        </Community>
+                        <Community imageUrl="default_profile.png" name="Pottery" membercount="463">
+                        </Community>
+                        <Community imageUrl="default_profile.png" name="Rugby" membercount="1335">
+                        </Community>
+                    </div>  
+                </div>
+            </div>
+            </Frame2>
+        </main>
+    );
 }
