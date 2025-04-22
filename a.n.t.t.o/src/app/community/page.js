@@ -1,4 +1,4 @@
-import Frame from '@/components/Frame';
+import Frame from '@/components/CommunityFrame';
 import Filter from '@/components/Filter';
 import FilterOption from '@/components/FilterOption';
 import Community from '@/components/Community';
