@@ -1,5 +1,5 @@
+// Frame for Profile
 export default function Frame3({ children, imageUrl, pageTitle }) {
-
     return (
         <div className="box-content h-fit w-full border-2 border-primary my-12 ">
             <div className="w-full h-12 bg-secondary relative ">

@@ -17,8 +17,8 @@ const Navbar = ({ isLoggedIn }) => {
                     <div className="sm-hidden font-medium lg-flex menu ml-[30rem] ">
                         <ul className="menu-horizontal ">
                             <li><Link href="/home">Home</Link></li>
-                            <li><Link href="/appointments">Communitites</Link></li>
-                            <li><Link href="/opportunities">Events</Link></li>
+                            <li><Link href="/community">Communitites</Link></li>
+                            <li><Link href="/events">Events</Link></li>
                         </ul>
                     </div>
 
@@ -65,8 +65,8 @@ const Navbar = ({ isLoggedIn }) => {
                             </div>
                             <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                                     <li><Link href="/home">Home</Link></li>
-                                    <li><Link href="/appointments">Communitites</Link></li>
-                                    <li><Link href="/opportunities">Events</Link></li>
+                                    <li><Link href="/community">Communitites</Link></li>
+                                    <li><Link href="/events">Events</Link></li>
                                 <div className="my-1 divider"></div>
                                 {isLoggedIn ? (
                                     <>
