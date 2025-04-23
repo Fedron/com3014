@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use aide::{axum::ApiRouter, openapi::OpenApi, transform::TransformOpenApi};
 use axum::Extension;
+use axum_reverse_proxy::ReverseProxy;
 use docs::docs_routes;
 use error::AppError;
 use state::AppState;
@@ -41,6 +42,7 @@ async fn main() -> Result<(), AppError> {
         )
         .finish_api_with(&mut api, api_docs)
         .layer(Extension(Arc::new(api)))
+        .merge(ReverseProxy::new("/proxied", "http://community-service"))
         .with_state(state);
 
     let host = std::env::var("HOST").unwrap_or("127.0.0.1".to_string());

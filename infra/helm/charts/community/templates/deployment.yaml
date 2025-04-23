@@ -28,10 +28,3 @@ spec:
           requests:
             cpu: 100m
             memory: 128Mi
-        volumeMounts:
-        - name: community-db
-          mountPath: /app/db
-      volumes:
-      - name: community-db
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-community-db-pvc
