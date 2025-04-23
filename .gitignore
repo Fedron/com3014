@@ -1,5 +1,7 @@
 .env
 target
+services/content-service/db.sqlite3
+dump.rdb
 infra/helm/umbrella-chart/charts/*
 infra/helm/umbrella-chart/Chart.lock
 __pycache__/
