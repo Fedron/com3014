@@ -27,6 +27,9 @@ echo "Building community-service docker image"
 cd ../..
 docker build -t community-service:latest -f services/community-service/Dockerfile .
 
+echo "Building content-service docker image"
+docker build -t content-service:latest -f services/content-service/Dockerfile .
+
 cd ./infra/helm/umbrella-chart
 helm dependency update
 helm uninstall antto
