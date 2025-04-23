@@ -32,6 +32,12 @@ async fn main() -> Result<(), AppError> {
     let state = AppState::from_dotenv()?;
     let mut api = OpenApi::default();
 
+    let community_service = std::env::var("COMMUNITY_SERVICE_HOST")
+        .map_err(|_| AppError::EnvironmentVariable("COMMUNITY_SERVICE_HOST"))?;
+
+    let content_service = std::env::var("CONTENT_SERVICE_HOST")
+        .map_err(|_| AppError::EnvironmentVariable("CONTENT_SERVICE_HOST"))?;
+
     let app = ApiRouter::new()
         .nest_api_service("/docs", docs_routes(state.clone()))
         .nest_api_service(
@@ -42,7 +48,14 @@ async fn main() -> Result<(), AppError> {
         )
         .finish_api_with(&mut api, api_docs)
         .layer(Extension(Arc::new(api)))
-        .merge(ReverseProxy::new("/proxied", "http://community-service"))
+        .merge(ReverseProxy::new(
+            "/proxied/community",
+            &format!("http://{community_service}"),
+        ))
+        .merge(ReverseProxy::new(
+            "/proxied/content",
+            &format!("http://{content_service}"),
+        ))
         .with_state(state);
 
     let host = std::env::var("HOST").unwrap_or("127.0.0.1".to_string());

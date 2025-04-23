@@ -13,13 +13,16 @@ Using docker:
 ```bash
 # assuming cwd is at the root of the repository
 docker build -t api-gateway:latest -f api-gateway/Dockerfile .
-docker run -p "3000:3000" -e "AUTH_SERVICE_HOST=auth-service" api-gateway
+docker run -p "3000:3000" -e "AUTH_SERVICE_HOST=auth-service" -e `...` api-gateway
 ```
 
 ## Configuration
 The following environment variable are required:
 ```bash
 AUTH_SERVICE_HOST=auth-service
+EVENTS_SERVICE_HOST=events-service
+COMMUNITY_SERVICE_HOST=community-service
+CONTENT_SERVICE_HOST=content-service
 ```
 
 Optional environment variables, with their default values:
