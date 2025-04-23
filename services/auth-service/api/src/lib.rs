@@ -18,7 +18,6 @@ use state::AppState;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use uuid::Uuid;
 
-mod auth;
 mod docs;
 mod error;
 mod handlers;
