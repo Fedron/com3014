@@ -9,5 +9,6 @@ RUN pip install --upgrade pip && \
 
 ENV HOST="0.0.0.0"
 ENV PORT="8000"
+ENV DJANGO_ALLOWED_HOSTS="*"
 
-CMD ["sh", "-c", "az login && python manage.py makemigrations && python manage.py migrate && python manage.py runserver $HOST:$PORT"]
+CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver $HOST:$PORT"]

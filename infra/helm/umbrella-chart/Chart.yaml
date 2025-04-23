@@ -12,6 +12,9 @@ dependencies:
   - name: community
     version: "0.1.0"
     repository: "file://../charts/community"
+  - name: content
+    version: "0.1.0"
+    repository: "file://../charts/content"
   - name: api-gateway
     version: "0.1.0"
     repository: "file://../charts/api-gateway"
