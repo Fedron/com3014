@@ -1,10 +1,14 @@
 ## Docker Instructions
 
-### 1. Docker Build
+### 1. Run redis-server in standalone terminal
+
+- `redis-server`
+
+### 2. Docker Build
 
 - `docker build -t content-service:latest -f services/content-service/Dockerfile .`
 
-### 2. Docker Run
+### 3. Docker Run
 
 - `docker run -p "8000:8000" -e "REDIS_SERVER=redis://host.docker.internal:6379/1" content-service`
 
