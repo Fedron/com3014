@@ -23,6 +23,10 @@ echo "Building events-service docker image"
 cd services/event_service
 docker build -t events-service:latest .
 
+echo "Building community-service docker image"
+cd ../..
+docker build -t community-service:latest -f services/community-service/Dockerfile .
+
 cd ./infra/helm/umbrella-chart
 helm dependency update
 helm uninstall antto

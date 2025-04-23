@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: community-service
+  labels:
+    app: {{ .Release.Name }}-community-service
+spec:
+  selector:
+    app: {{ .Release.Name }}-community-service
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+    name: http
