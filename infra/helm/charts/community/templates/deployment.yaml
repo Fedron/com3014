@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-community-service
+  labels:
+    app: {{ .Release.Name }}-community-service
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-community-service
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-community-service
+    spec:
+      containers:
+      - name: community-service
+        image: "community-service:latest"
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi

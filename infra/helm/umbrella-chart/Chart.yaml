@@ -9,6 +9,9 @@ dependencies:
   - name: events
     version: "0.1.0"
     repository: "file://../charts/events"
+  - name: community
+    version: "0.1.0"
+    repository: "file://../charts/community"
   - name: api-gateway
     version: "0.1.0"
     repository: "file://../charts/api-gateway"
