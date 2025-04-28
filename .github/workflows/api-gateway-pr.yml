@@ -1,0 +1,49 @@
+name: PR Pipeline for api-gateway
+
+on:
+    pull_request:
+        paths:
+            - 'api-gateway/**'
+
+jobs:
+    build-and-test:
+        name: Build, Lint & Test
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+            
+            - name: Set up Rust
+              uses: dtolnay/rust-toolchain@stable
+
+            - name: Cache Rust dependencies
+              uses: Swatinem/rust-cache@v2
+
+            - name: Install Tarpaulin
+              run: cargo install cargo-tarpaulin
+
+            - name: Check formatting
+              run: |
+                cd api-gateway
+                cargo fmt --check
+
+            - name: Run Clippy (Linting)
+              run: |
+                cd api-gateway
+                cargo clippy -- -D warnings
+
+            - name: Build project
+              run: |
+                cd api-gateway
+                cargo build --release
+            
+            - name: Run tests
+              run: |
+                cd api-gateway
+                cargo test --all
+            
+            - name: Run coverage
+              run: |
+                cd api-gateway
+                cargo tarpaulin --verbose --timeout 60 --out Lcov

@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use aide::{axum::ApiRouter, openapi::OpenApi, transform::TransformOpenApi};
 use axum::{Extension, middleware};
+use axum_reverse_proxy::ReverseProxy;
 use docs::docs_routes;
+use error::AppError;
 use metrics::{start_metrics_server, track_metrics};
 use state::AppState;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -36,6 +38,14 @@ async fn start_main_server() {
     let state = AppState::from_dotenv().unwrap();
     let mut api = OpenApi::default();
 
+    let community_service = std::env::var("COMMUNITY_SERVICE_HOST")
+        .map_err(|_| AppError::EnvironmentVariable("COMMUNITY_SERVICE_HOST"))
+        .unwrap();
+
+    let content_service = std::env::var("CONTENT_SERVICE_HOST")
+        .map_err(|_| AppError::EnvironmentVariable("CONTENT_SERVICE_HOST"))
+        .unwrap();
+
     let app = ApiRouter::new()
         .nest_api_service("/docs", docs_routes(state.clone()))
         .nest_api_service(
@@ -46,8 +56,16 @@ async fn start_main_server() {
         )
         .finish_api_with(&mut api, api_docs)
         .layer(Extension(Arc::new(api)))
-        .with_state(state)
-        .route_layer(middleware::from_fn(track_metrics));
+        .merge(ReverseProxy::new(
+            "/proxied/community",
+            &format!("http://{community_service}"),
+        ))
+        .merge(ReverseProxy::new(
+            "/proxied/content",
+            &format!("http://{content_service}"),
+        ))
+        .route_layer(middleware::from_fn(track_metrics))
+        .with_state(state);
 
     let host = std::env::var("HOST").unwrap_or("127.0.0.1".to_string());
     let port = std::env::var("PORT").unwrap_or("3000".to_string());

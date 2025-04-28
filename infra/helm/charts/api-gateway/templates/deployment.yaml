@@ -27,6 +27,10 @@ spec:
           value: "auth-service"
         - name: EVENTS_SERVICE_HOST
           value: "events-service"
+        - name: COMMUNITY_SERVICE_HOST
+          value: "community-service"
+        - name: CONTENT_SERVICE_HOST
+          value: "content-service"
         - name: HOST
           value: "0.0.0.0"
         - name: PORT
