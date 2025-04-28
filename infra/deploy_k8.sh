@@ -8,10 +8,9 @@ cleanup() {
 
 trap cleanup SIGINT
 
-minikube stop
 minikube start --cpus=4 --memory=4096 --disk-size=20g
 
-eval $(minikube docker-env)
+eval $(minikube -p minikube docker-env)
 
 echo "Building auth-service docker image"
 docker build -t auth-service:latest -f services/auth-service/Dockerfile .
