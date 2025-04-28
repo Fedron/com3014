@@ -21,6 +21,7 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 80
+        - containerPort: 9090
         env:
         - name: AUTH_SERVICE_HOST
           value: "auth-service"
@@ -34,6 +35,8 @@ spec:
           value: "0.0.0.0"
         - name: PORT
           value: "80"
+        - name: METRICS_PORT
+          value: "9090"
         - name: JWT_SECRET
           valueFrom:
             secretKeyRef:

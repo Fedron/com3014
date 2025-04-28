@@ -20,4 +20,6 @@ shared-rust = { path = "../common/shared-rust" }
 uuid = { version = "1.15.1", features = ["v4", "serde"] }
 reqwest = { version = "0.12.14", features = ["json"] }
 chrono = { version = "0.4.40", features = ["serde"] }
+metrics = "0.24.1"
+metrics-exporter-prometheus = "0.16.2"
 axum-reverse-proxy = "0.8.0"
