@@ -7,6 +7,7 @@ use docs::docs_routes;
 use error::AppError;
 use metrics::{start_metrics_server, track_metrics};
 use state::AppState;
+use tower_http::cors::CorsLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod auth;
@@ -65,6 +66,7 @@ async fn start_main_server() {
             &format!("http://{content_service}"),
         ))
         .route_layer(middleware::from_fn(track_metrics))
+        .layer(CorsLayer::permissive())
         .with_state(state);
 
     let host = std::env::var("HOST").unwrap_or("127.0.0.1".to_string());
