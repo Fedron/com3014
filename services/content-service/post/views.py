@@ -13,7 +13,7 @@ from django.http import Http404
 #Provides a list of all posts of this community, or creates a new one.
 class PostListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
-    parser_classes = [FormParser, MultiPartParser]
+    #parser_classes = [FormParser, MultiPartParser]
     
     def get_queryset(self):
         import time
@@ -34,7 +34,7 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
 class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    parser_classes = [FormParser, MultiPartParser]
+    #parser_classes = [FormParser, MultiPartParser]
     lookup_url_kwarg = "post_id"
 
     #Cache GET request with TTL of 60 mins

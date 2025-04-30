@@ -8,7 +8,7 @@ class Post(models.Model):
     community = models.CharField(max_length=255, null=False, blank=False)
     created_by = models.CharField(max_length=255, null=False, blank=False)
     likes = models.IntegerField(null=False, blank=False, default=0)
-    attached_file = models.FileField(upload_to='uploads', null=True, blank=True)
+    #attached_file = models.FileField(upload_to='uploads', null=True, blank=True)
     #Add once community branch merged
 
 class Comment(models.Model):
