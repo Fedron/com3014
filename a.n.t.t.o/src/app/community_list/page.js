@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link';
-import Frame2 from '@/components/Frame2';
+import CommunityFrame from '@/components/CommunityFrame';
 import CommunityCard from '@/components/CommunityCard';
 import Filter from '@/components/Filter';
 import FilterOption from '@/components/FilterOption';
@@ -30,8 +30,17 @@ export default function CommunityList() {
 
     return (
         <main>
-            <Frame2 imageUrl="/community_default.png" pageTitle="Communities">
+            <CommunityFrame imageUrl="/community_default.png" pageTitle="Communities">
                 <div className="relative">
+                    <div className="absolute -top-7 left-1/2  -translate-x-1/2 -translate-y-1/2  w-[500px]">
+                            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                </svg>   
+                            </div>
+                            <input type="search" id="default-search" className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary focus:border-primary dark:border-primary dark:placeholder-primary  dark:text-white dark:focus:ring-primary dark:focus:border-primary" placeholder="Search ..." required />
+                            <button type="submit" className="text-base-100 absolute end-2.5 bottom-1  bg-primary hover:bg-secondary focus:ring-4 focus:outline-none focus:ring-secondary font-medium rounded-lg text-sm px-6 py-1">Search</button>
+                    </div>  
                     <div className='mx-4 my-6 grid grid-cols-5 gap-4'>
                         <div className='container'>
                             <div className="font-heading text-m font-bold mb-2">
@@ -74,7 +83,7 @@ export default function CommunityList() {
                         </div>  
                     </div>
                 </div>
-            </Frame2>
+            </CommunityFrame>
         </main>
     );
 }

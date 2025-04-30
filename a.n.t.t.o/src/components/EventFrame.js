@@ -17,7 +17,7 @@ const EventFrame = ({ isLoggedIn, children, imageUrl, pageTitle }) => {
            
         </div>
         {imageUrl ? (
-            <div style={{backgroundImage: `url(/images/banners/${imageUrl})`}} className="relative w-full h-32 justify-center bg-no-repeat bg-cover bg-center"></div>
+            <div style={{backgroundImage: `url(/images/banners/${imageUrl})`}} className="relative w-full h-56 justify-center bg-no-repeat bg-cover bg-center"></div>
         ) : (
             <>
             </>

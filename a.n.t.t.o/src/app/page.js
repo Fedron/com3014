@@ -11,6 +11,9 @@ import CheckboxOption from '@/components/CheckboxOption';
 export default function Home() {
   const [communities, setCommunities] = useState([]);
   const [error, setError] = useState('');
+  const [posts, setPosts] = useState([]);
+  const [postError, setPostError] = useState('');
+
 
   useEffect(() => {
     const fetchCommunities = async () => {
@@ -18,7 +21,6 @@ export default function Home() {
         const res = await fetch('http://localhost:8080/proxied/community/v1/communities/');
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
-
         const sorted = [...data].sort((a, b) => (b.members || 0) - (a.members || 0));
         setCommunities(sorted);
       } catch (err) {
@@ -26,13 +28,27 @@ export default function Home() {
         setError('Could not load popular communities.');
       }
     };
-
+  
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch('http://localhost:8080/proxied/content/v1/posts/list/');
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+        const data = await res.json();
+        setPosts(data.slice(0, 20)); // limit to 20 posts
+      } catch (err) {
+        console.error('Failed to fetch posts:', err);
+        setPostError('Could not load posts.');
+      }
+    };
+  
     fetchCommunities();
+    fetchPosts();
   }, []);
+  
 
   return (
     <main>
-      <Frame2 imageUrl="/mentoring.jpg" pageTitle="Home">
+      <Frame2 imageUrl="/HOME_BANNER.png" pageTitle="Home">
         <div className="relative mx-[2%]">
           <div className='my-4 grid grid-cols-5 gap-4'>
             <div className='container'>
@@ -54,10 +70,18 @@ export default function Home() {
               <div className='grid grid-cols-5'>
                 <div className='font-heading text-sm'>1 to 50 of 1307 results</div>
               </div>
-              <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc="F" comments="100" likedislike="-100" />
-              <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc="F" comments="100" likedislike="-100" />
-              <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc="F" comments="100" likedislike="-100" />
-              <PostCard imageUrl="default_profile.png" name="Science of Sleep" shortdesc="F" comments="100" likedislike="-100" />
+                {postError && <p className="text-red-500">{postError}</p>}
+                {posts.map((post, index) => (
+                <Link key={post.id || index} href={`/post/${post.id}`}>
+                    <PostCard
+                    imageUrl="default_profile.png"
+                    name={post.title}
+                    shortdesc={post.description}
+                    comments={"0"} // replace with real count later
+                    likedislike={(post.likes || 0).toString()}
+                    />
+                </Link>
+                ))}
             </div>
 
             <div className='container'>

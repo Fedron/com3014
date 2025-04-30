@@ -8,7 +8,7 @@ import CheckboxOption from '@/components/CheckboxOption';
 export default function Home() {
     return (
         <main>
-            <Frame2 imageUrl="/mentoring.jpg" pageTitle="Home">
+            <Frame2 imageUrl="/HOME_BANNER.png" pageTitle="Home">
             <div className="relative mx-[2%]">
                 <div className='my-4 grid grid-cols-5 gap-4 '>
                     <div className='container'>
