@@ -1,8 +1,8 @@
-import CompanyCard from '@/components/CompanyCard';
+// import CompanyCard from '@/components/CompanyCard';
 import Frame from '@/components/Frame';
 import CommentBox from '@/components/CommentBox';
 import Comment from '@/components/Comment';
-import Tag from '@/components/Tag';
+// import Tag from '@/components/Tag';
 import PostContent from '@/components/PostContent';
 
 export default function Page({ params }) {

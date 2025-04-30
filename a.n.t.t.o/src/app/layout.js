@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
     <html lang="en" theme-data="mytheme">
       <head></head>
       <body className='flex flex-col min-h-screen'>
-        <Navbar isLoggedIn={true} />
+        <Navbar isLoggedIn={false} />
           <div className="flex-grow w-full">
             <div className='w-full max-w-[1280px] mx-auto p-5'>
               {children}

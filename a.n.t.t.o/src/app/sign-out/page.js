@@ -10,6 +10,7 @@ export default function SignOut() {
             localStorage.setItem('userId', 0);
             localStorage.setItem('userFirstName', '');
             localStorage.setItem('userLastName', '');
+            localStorage.setItem('token', '');
         }
         window.location.href = '/';
     })

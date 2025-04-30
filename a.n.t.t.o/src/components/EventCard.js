@@ -1,7 +1,7 @@
 import Link from 'next/link';
-function EventCard({imageUrl,cardTitle,date,price,location,closingdate}) {
+function EventCard({imageUrl,cardTitle,date,price,location,closingdate,eventID,}) {
     return (
-        // <Link href={`/event_description/${Id}`}>
+        // <Link href={`/event_description/${eventId}`}>
             <div className="card card-compact bg-base-100 w-[98%] shadow-sm">
                 
                 <div style={{backgroundImage: `url(/images/${imageUrl})`}} className=" h-40 w-full rounded-t-lg justify-center bg-no-repeat bg-cover bg-center"></div> 
