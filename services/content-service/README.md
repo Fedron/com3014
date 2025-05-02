@@ -23,7 +23,15 @@
 
 ---
 
-### 2. Retrieve, Update, Delete Posts
+### 2. List All Posts
+
+- **Endpoint:** `v1/posts/list/<int:community_id>/`
+- **Methods:**
+  - **GET:** Retrieves a list of all posts for a community.
+
+---
+
+### 3. Retrieve, Update, Delete Posts
 
 - **Endpoint:** `v1/posts/<int:post_id>/`
 - **Methods:**
@@ -33,7 +41,7 @@
 
 ---
 
-### 3. List & Create Comments
+### 4. List & Create Comments
 
 - **Endpoint:** `v1/comments/list/<int:post_id>/`
 - **Methods:**
@@ -42,7 +50,7 @@
 
 ---
 
-### 4. Retrieve, Update, Delete Comments
+### 5. Retrieve, Update, Delete Comments
 
 - **Endpoint:** `v1/comments/<int:comment_id>/`
 - **Methods:**

@@ -16,8 +16,6 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
     #parser_classes = [FormParser, MultiPartParser]
     
     def get_queryset(self):
-        import time
-        time.sleep(4)
         community_id = self.kwargs['community_id']
         post_list = Post.objects.filter(community=community_id)
         if post_list.count() == 0:
@@ -27,6 +25,23 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
 
     #Cache GET request with TTL of 60 mins
     @method_decorator(cache_page(60 * 60, key_prefix='post_list'))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+#Provides a list of all posts, or creates a new one.
+class PostListAllAPIView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    #parser_classes = [FormParser, MultiPartParser]
+    
+    def get_queryset(self):
+        post_list = Post.objects.all()
+        if post_list.count() == 0:
+            raise Http404
+        else:
+            return post_list
+
+    #Cache GET request with TTL of 60 mins
+    @method_decorator(cache_page(60 * 60, key_prefix='post_list_all'))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
