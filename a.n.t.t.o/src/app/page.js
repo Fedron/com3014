@@ -18,7 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchCommunities = async () => {
       try {
-        const res = await fetch('http://localhost:8080/proxied/community/v1/communities/');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/community/v1/communities/`);
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
         const sorted = [...data].sort((a, b) => (b.members || 0) - (a.members || 0));
@@ -31,7 +31,7 @@ export default function Home() {
   
     const fetchPosts = async () => {
       try {
-        const res = await fetch('http://localhost:8080/proxied/content/v1/posts/list/');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/content/v1/posts_list_all/`);
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
         setPosts(data.slice(0, 20)); // limit to 20 posts

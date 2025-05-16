@@ -34,7 +34,7 @@ export default function CreateEventPage() {
   
       console.log('Sending payload:', payload);
   
-      const response = await fetch('http://localhost:8080/v1/events', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -22,7 +22,7 @@ const SignUp = () => {
                 password: password,
             };
 
-            const response = await fetch("http://localhost:8080/v1/signup", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

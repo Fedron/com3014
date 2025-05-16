@@ -14,8 +14,8 @@ export default function CommunityList() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await fetch("http://localhost:8080/proxied/community/v1/communities/");
-                if (!result.ok) throw new Error('Failed to fetch events');
+                const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/community/v1/communities/`);
+                if (!result.ok) throw new Error('Failed to fetch communities');
                 const res1data = await result.json();
                 setCommunityList(res1data);
             } catch (error) {

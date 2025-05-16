@@ -16,7 +16,7 @@ export default function Page({ params }) {
     useEffect(() => {
       const fetchEvent = async () => {
         try {
-          const res = await fetch(`http://localhost:8080/proxied/content/v1/posts/${params.id}/`);
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/content/v1/posts/${params.id}/`);
           if (!res.ok) throw new Error(`Failed to fetch post: ${res.status}`);
           const data = await res.json();
           setPostData(data);
@@ -29,7 +29,7 @@ export default function Page({ params }) {
 
     const fetchComments = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/proxied/content/v1/comments/list/${params.id}/`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/content/v1/comments/list/${params.id}/`);
         if (!res.ok) throw new Error(`Failed to fetch comments: ${res.status}`);
         const data = await res.json();
         setComments(data);

@@ -31,7 +31,7 @@ export default function CommunityPage() {
   useEffect(() => {
     const fetchPostsAndCommentCounts = async () => {
       try {
-        const postRes = await fetch(`http://localhost:8080/proxied/content/v1/posts/list/${communityId}/`);
+        const postRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/content/v1/posts/list/${communityId}/`);
         if (!postRes.ok) throw new Error(`Failed to fetch posts: ${postRes.status}`);
         const postData = await postRes.json();
         setPosts(postData);
@@ -41,7 +41,7 @@ export default function CommunityPage() {
         await Promise.all(
           postData.map(async (post) => {
             try {
-              const commentRes = await fetch(`http://localhost:8080/proxied/content/v1/comments/list/${post.id}/`);
+              const commentRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/content/v1/comments/list/${post.id}/`);
               if (!commentRes.ok) throw new Error();
               const comments = await commentRes.json();
               commentCounts[post.id] = comments.length;

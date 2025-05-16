@@ -36,7 +36,7 @@ export default function CreateCommunity() {
           desc: description
         };
     
-        const response = await fetch("http://localhost:8080/proxied/community/v1/communities/", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/community/v1/communities/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

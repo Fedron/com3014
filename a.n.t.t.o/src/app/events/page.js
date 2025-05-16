@@ -14,7 +14,7 @@ export default function Events() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await fetch("http://localhost:8080/v1/events");
+                const result = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/events`);
                 if (!result.ok) throw new Error('Failed to fetch events');
                 const res1data = await result.json();
                 setEventList(res1data);
