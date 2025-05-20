@@ -29,8 +29,12 @@ docker build -t community-service:latest -f services/community-service/Dockerfil
 echo "Building content-service docker image"
 docker build -t content-service:latest -f services/content-service/Dockerfile .
 
+echo "Building frontend docker image"
+cd ./a.n.t.t.o
+docker build -t frontend:latest .
+
 echo "Deploying ANTTO"
-cd ./infra/helm/umbrella-chart
+cd ../infra/helm/umbrella-chart
 helm dependency update
 helm uninstall antto
 helm install antto ./
@@ -51,15 +55,26 @@ TUNNEL_PID=$!
 
 echo "Waiting for external IP..."
 while true; do
-    EXTERNAL_IP=$(kubectl get svc api-gateway --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
-    if [[ -n "$EXTERNAL_IP" ]]; then
+    API_EXTERNAL_IP=$(kubectl get svc api-gateway --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+    if [[ -n "$API_EXTERNAL_IP" ]]; then
         break
     fi
     sleep 2
 done
 
-PORT=$(kubectl get svc api-gateway -o=jsonpath='{.spec.ports[0].port}')
-echo "API Gateway is accessible at: http://$EXTERNAL_IP:$PORT/docs"
+while true; do
+    FRONTEND_EXTERNAL_IP=$(kubectl get svc frontend --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}")
+    if [[ -n "$FRONTEND_EXTERNAL_IP" ]]; then
+        break
+    fi
+    sleep 2
+done
+
+API_PORT=$(kubectl get svc api-gateway -o=jsonpath='{.spec.ports[0].port}')
+echo "API Gateway is accessible at: http://$API_EXTERNAL_IP:$API_PORT/docs"
+
+FRONTEND_PORT=$(kubectl get svc frontend -o=jsonpath='{.spec.ports[0].port}')
+echo "Frontend is accessible at: http://$FRONTEND_EXTERNAL_IP:$FRONTEND_PORT"
 
 wait $TUNNEL_PID
 cleanup

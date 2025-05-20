@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-content-service
+  name: {{ .Release.Name }}-frontend
   labels:
-    app: {{ .Release.Name }}-content-service
+    app: frontend
     chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-content-service
+      app: frontend
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-content-service
+        app: frontend
     spec:
       containers:
-      - name: content-service
-        image: "content-service:latest"
+      - name: frontend
+        image: "frontend:latest"
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8000
+        - containerPort: 3000
         env:
-        - name: REDIS_SERVER
-          value: redis://redis-service:6379
+        - name: NEXT_PUBLIC_API_URL
+          value: http://api-gateway:8080
         resources:
           limits:
             cpu: 500m
