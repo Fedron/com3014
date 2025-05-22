@@ -38,6 +38,8 @@ Ensure you have the following installed:
 
 ### 📥 Clone and Deploy
 
+In a Linux environment:
+
 ```bash
 git clone https://github.com/Fedron/com3014.git
 cd com3014
@@ -53,3 +55,17 @@ This script will:
 ### 🌐 Accessing the App
 
 The script, run above, will print the URL that will allow access to the application.
+
+### 🛠️ Troubleshooting
+
+### Unable to run the deploy script
+
+This is likely due to the script containing `CRLF` line endings when it was cloned - change the line endings to `LF` and run the script again.
+
+#### Minikube - Start Host Failed
+
+This can sometimes happen when you run the script when you already have an existing Minikube cluster - delete your existing Minikube cluster and run the script again.
+
+#### Error from server (NotFound): services "{service_name}" not found
+
+The frontend, API gateway, or one of the microservices has failed to start; to confirm run `kubectl get pods`. If any of the `antto` pods are not in a running state, re-run the deploy script to quickly restart the cluster.

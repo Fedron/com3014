@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-events-service
   labels:
@@ -31,7 +31,12 @@ spec:
         volumeMounts:
         - name: event-db
           mountPath: /app/db
-      volumes:
-      - name: event-db
-        persistentVolumeClaim:
-          claimName: {{ .Release.Name }}-events-db-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: event-db
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 1Gi
