@@ -31,7 +31,7 @@ export default function Home() {
   
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/content/v1/post_list_all/`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/proxied/content/v1/posts/list/all`);
         if (!res.ok) throw new Error(`Error ${res.status}`);
         const data = await res.json();
         setPosts(data.slice(0, 20)); // limit to 20 posts
