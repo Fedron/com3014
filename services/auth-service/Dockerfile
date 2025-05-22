@@ -2,6 +2,6 @@ FROM rust
 
 COPY . /app
 WORKDIR /app/services/auth-service
-RUN cargo build --release
+RUN cargo build
 
-CMD ["./target/release/auth-service"]
+CMD ["./target/debug/auth-service"]

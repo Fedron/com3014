@@ -1,18 +1,21 @@
 dependencies:
-  - name: auth
-    repository: file://../charts/auth
-    version: 0.1.0
-  - name: events
-    repository: file://../charts/events
-    version: 0.1.0
-  - name: community
-    repository: file://../charts/community
-    version: 0.1.0
-  - name: content
-    repository: file://../charts/content
-    version: 0.1.0
-  - name: api-gateway
-    repository: file://../charts/api-gateway
-    version: 0.1.0
-digest: sha256:e1e9cbccce6c2ccb2a490e49ed7e5c38420414c47d85c5d3b1e5a823a78670e1
-generated: "2025-04-23T20:44:36.221030177+01:00"
+- name: auth
+  repository: file://../charts/auth
+  version: 0.1.0
+- name: events
+  repository: file://../charts/events
+  version: 0.1.0
+- name: community
+  repository: file://../charts/community
+  version: 0.1.0
+- name: content
+  repository: file://../charts/content
+  version: 0.1.0
+- name: api-gateway
+  repository: file://../charts/api-gateway
+  version: 0.1.0
+- name: frontend
+  repository: file://../charts/frontend
+  version: 0.1.0
+digest: sha256:9571ca9256be481bc1a1d19d873d5f7f3da7b5ff06c887a534a59e6c9ad57e27
+generated: "2025-05-20T09:24:53.172433099+01:00"

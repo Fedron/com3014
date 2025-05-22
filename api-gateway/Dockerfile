@@ -2,6 +2,6 @@ FROM rust
 
 COPY . /app
 WORKDIR /app/api-gateway
-RUN cargo build --release
+RUN cargo build
 
-CMD ["./target/release/api-gateway"]
+CMD ["./target/debug/api-gateway"]
